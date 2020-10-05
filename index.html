@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/icon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <title>Task app</title>
+</head>
+<body>
+    <header>
+        <div class="logo-img">
+            <div class="logo"></div>
+        </div>
+        <div class="logo">
+            <p>
+                task
+            </p>
+        </div>
+        <div class="options">
+            <button>
+                options
+                <ul class="content">
+                    <li class="text-col"><p>Help</p></li>
+                    <li class="text-col"><p>Change background color</p> <div id="bgcol" /></li>
+                    <li class="text-col"><p>Change text color</p> <div id="textcol" /></li>
+                </ul>
+            </button>
+        </div>
+    </header>
+
+    <div class="input">
+        <div class="wrapper">
+            <img src="img/ok-48.png" alt="">
+            <input type="text" placeholder="Enter your to do task here" name="text-input" id="input" class="text-col">
+        </div>
+    </div>
+
+    <div id="no-content" class="text-col">
+        <h1>No tasks yet</h1>
+    </div>
+
+    <div class="main-content">
+        
+    </div>
+
+    <div id="help">
+        <div class="node text-col"><p>Press <kbd>Enter</kbd> to insert task.</p></div>
+        <div class="node text-col"><p>Press <kbd>Delete</kbd> to delete task.</p></div>
+        <div class="node text-col"><p>Press <kbd>F1</kbd> to reset colors.</p></div>
+        <div class="node text-col"></div>
+        <div class="node text-col"></div>
+        <div class="node text-col"></div>
+        <button id="close-btn">close</button>
+    </div>
+
+</body>
+</html>
