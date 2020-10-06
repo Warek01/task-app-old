@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/icon.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <link rel="shortcut icon" href="./src/img/icon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="./src/style.css">
+    <script src="./src/jquery.js" defer></script>
+    <script src="./src/script.js" defer></script>
     <title>Task app</title>
 </head>
 <body>
@@ -18,13 +19,13 @@
                 task
             </p>
         </div>
-        <div class="options">
+        <div id="options">
             <button>
                 options
                 <ul class="content">
-                    <li class="text-col"><p>Help</p></li>
-                    <li class="text-col"><p>Change background color</p> <div id="bgcol" /></li>
-                    <li class="text-col"><p>Change text color</p> <div id="textcol" /></li>
+                    <li class="text-col help"><p>Help</p></li>
+                    <li class="text-col bgc"><p>Change background color</p> <div id="bgcol"></li>
+                    <li class="text-col textc"><p>Change text color</p> <div id="textcol"></li>
                 </ul>
             </button>
         </div>
@@ -32,12 +33,12 @@
 
     <div class="input">
         <div class="wrapper">
-            <img src="img/ok-48.png" alt="">
+            <img src="./src/img/ok-48.png" alt="">
             <input type="text" placeholder="Enter your to do task here" name="text-input" id="input" class="text-col">
         </div>
     </div>
 
-    <div id="no-content" class="text-col">
+    <div id="banner-empty" class="text-col">
         <h1>No tasks yet</h1>
     </div>
 
@@ -45,7 +46,7 @@
         
     </div>
 
-    <div id="help">
+    <div id="banner_help">
         <div class="node text-col"><p>Press <kbd>Enter</kbd> to insert task.</p></div>
         <div class="node text-col"><p>Press <kbd>Delete</kbd> to delete task.</p></div>
         <div class="node text-col"><p>Press <kbd>F1</kbd> to reset colors.</p></div>
