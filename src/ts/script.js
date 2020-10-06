@@ -1,5 +1,5 @@
 "use strict";
-const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), input = $("#input");
+const body = $("body"), options = $("#options"), banner_help = $("#banner_help");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
     "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = [""];
 let colorSetting = {
@@ -8,15 +8,7 @@ let colorSetting = {
     bgIndex: 0,
     originalTextCol: body.css("color"),
     currentTextCol: body.css("color"),
-    textIndex: 0,
-    reset() {
-        body.css({
-            "background-color": this.originalBg,
-            "color": this.originalTextCol
-        });
-        this.bgIndex = 0;
-        this.textIndex = 0;
-    }
+    textIndex: 0
 };
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
@@ -44,13 +36,11 @@ options.find(".textc").click(function (event) {
 banner_help.find("#close-btn").click(function (event) {
     $(this).parent().hide("fast");
 });
-$(window).keydown(function (event) {
-    if (event.key === "F1") {
-        event.preventDefault();
-        colorSetting.reset();
-    }
-    else if (event.key === "Enter" && input.is(":focus")) {
-        console.log("Task appended!");
+// interface JQuery {
+//    click(event: any): void;
+// }
+$(window).click(function (event) {
+    if (event.key.toLowerCase() === "F1") {
     }
 });
 class Task {

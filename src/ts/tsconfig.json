@@ -5,6 +5,7 @@
       "jsx": "preserve",
       "sourceMap": false,
       "watch": true,
+      "strictNullChecks": false,
       "alwaysStrict": true,
       "strict": true,
       "outDir": "../"

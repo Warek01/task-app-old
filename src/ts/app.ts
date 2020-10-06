@@ -10,9 +10,9 @@ let tasks: any = JSON.parse(fs.readFileSync(path.join(__dirname, "tasks.json")).
 
 app.use(cors(), express.static(path.resolve(__dirname, "../")));
 
-app.route("/tasks").get((req, res, next) => {
+app.route("/tasks").get((req, res, next): void => {
 
-}).post(bodyParser(), (req, res, next) => {
+}).post(bodyParser(), (req, res, next): void => {
 
 });
 
