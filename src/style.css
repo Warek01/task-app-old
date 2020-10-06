@@ -24,6 +24,13 @@ h1, h2, h3, h4, h5, h6 {
   user-select: none;
 }
 
+kbd {
+  display: inline-block;
+  text-indent: 0;
+  background-color: rgba(24, 17, 17, 0.863);
+  border-radius: 5px;
+}
+
 header {
   display: block;
   position: relative;
@@ -62,7 +69,7 @@ header .logo {
   line-height: 1.15;
   user-select: none;
 }
-header .options {
+header #options {
   display: flex;
   position: relative;
   align-items: center;
@@ -73,7 +80,7 @@ header .options {
   margin-right: 80px;
   user-select: none;
 }
-header .options button {
+header #options button {
   width: 120px;
   height: 50px;
   text-transform: uppercase;
@@ -84,19 +91,18 @@ header .options button {
   font-size: 16px;
   letter-spacing: 1px;
   font-weight: 600;
-  transition: background-color .3s ease;
-  transition: box-shadow 1s ease;
+  transition: background-color .3s ease, box-shadow 1s ease;
 }
-header .options button:hover {
+header #options button:hover {
   background-color: #1168a7;
   box-shadow: 0 0 40px #1e90ff, 0 0 80px #1e90ff;
 }
-header .options button:hover ul.content {
+header #options button:hover ul.content {
   height: 178px;
   width: 160px;
   margin-left: -20px;
 }
-header .options button ul.content {
+header #options button ul.content {
   position: absolute;
   margin-top: 15px;
   width: 120px;
@@ -109,29 +115,29 @@ header .options button ul.content {
   transition: all .5s ease;
   font-weight: normal;
 }
-header .options button ul.content li {
+header #options button ul.content li {
   list-style: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-header .options button ul.content li:hover {
+header #options button ul.content li:hover {
   background-color: #0f5a90;
 }
-header .options button ul.content li:nth-of-type(1) {
+header #options button ul.content li:nth-of-type(1) {
   height: 40px;
   border-bottom: 2px solid black;
   border-top: 2px solid black;
 }
-header .options button ul.content li:nth-of-type(2) {
+header #options button ul.content li:nth-of-type(2) {
   height: 80px;
   border-bottom: 2px solid black;
 }
-header .options button ul.content li:nth-of-type(3) {
+header #options button ul.content li:nth-of-type(3) {
   height: 50px;
   border-bottom: 2px solid black;
 }
-header .options button ul.content li #bgcol {
+header #options button ul.content li #bgcol {
   display: block;
   width: 18px;
   min-width: 18px;
@@ -143,7 +149,7 @@ header .options button ul.content li #bgcol {
   left: -30px;
   background-color: #d1d8e0;
 }
-header .options button ul.content li #textcol {
+header #options button ul.content li #textcol {
   display: block;
   width: 18px;
   min-width: 18px;
@@ -155,10 +161,10 @@ header .options button ul.content li #textcol {
   left: -30px;
   background-color: white;
 }
-header .options button:focus {
+header #options button:focus {
   outline: none;
 }
-header .options:focus {
+header #options:focus {
   outline: none;
 }
 
@@ -207,21 +213,6 @@ header .options:focus {
   font-size: 14px;
   letter-spacing: 1px;
   z-index: 1;
-}
-
-#no-content {
-  position: absolute;
-  display: flex;
-  width: 95%;
-  height: 100px;
-  margin: 60px 2.5% 0 2.5%;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid #0a3d62;
-  border-top: 1px solid #0a3d62;
-}
-#no-content h1 {
-  margin-top: 10px;
 }
 
 .main-content {
@@ -290,7 +281,22 @@ header .options:focus {
   transition: width .3s ease;
 }
 
-#help {
+#banner-empty {
+  position: absolute;
+  display: flex;
+  width: 95%;
+  height: 100px;
+  margin: 60px 2.5% 0 2.5%;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #0a3d62;
+  border-top: 1px solid #0a3d62;
+}
+#banner-empty h1 {
+  margin-top: 10px;
+}
+
+#banner_help {
   position: absolute;
   display: none;
   width: 95%;
@@ -301,7 +307,7 @@ header .options:focus {
   z-index: 999;
   transition: height .3s ease;
 }
-#help .node {
+#banner_help .node {
   position: relative;
   display: flex;
   align-items: center;
@@ -313,7 +319,7 @@ header .options:focus {
   font-size: 18px;
   cursor: default;
 }
-#help #close-btn {
+#banner_help #close-btn {
   position: absolute;
   display: block;
   width: 5%;
@@ -328,17 +334,10 @@ header .options:focus {
   cursor: pointer;
   transition: background-color .15s ease, box-shadow .3s ease;
 }
-#help #close-btn:hover {
+#banner_help #close-btn:hover {
   background-color: #1168a7;
   box-shadow: 0 0 40px #1e90ff, 0 0 80px #1e90ff;
 }
-#help #close-btn:focus {
+#banner_help #close-btn:focus {
   outline: none;
-}
-
-kbd {
-  display: inline-block;
-  text-indent: 0;
-  background-color: rgba(24, 17, 17, 0.863);
-  border-radius: 5px;
 }

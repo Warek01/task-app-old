@@ -1,0 +1,53 @@
+.input {
+   position: relative;
+   display: block;
+   height: 50px;
+   margin-top: 30px;
+
+   .wrapper {
+      position: relative;
+      display: block;
+      height: 50px;
+      width: 470px;
+      margin: 0 auto;
+      background-color: #485460;
+      border-radius: 25px;
+
+      img {
+         position: relative;
+         display: block;
+         float: left;
+         margin-top: 5px;
+         margin-left: 5px;
+         width: 40px;
+         height: 40px;
+         max-width: 40px;
+         max-height: 40px;
+      }
+   }
+
+   input[type=text] {
+      position: relative;
+      display: block;
+      width: 370px;
+      height: 50px;
+      z-index: 1;
+      margin: 0 auto;
+      font-size: 16px;
+      border: none;
+      background-color: #485460;
+
+      &:focus {
+         outline: none;
+      }
+
+      &::placeholder {
+         color: #fff;
+         font-size: 14px;
+         letter-spacing: 1px;
+         z-index: 1;
+      }
+
+   }
+
+}

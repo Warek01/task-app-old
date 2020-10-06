@@ -1,0 +1,77 @@
+.main-content {
+   position: relative;
+   box-sizing: content-box;
+   width: 95%;
+   min-height: 100px;
+   margin: 80px auto 0 auto;
+
+
+   .task {
+       position: relative;
+       display: block;
+       width: 100%;
+       min-height: 50px;
+       margin-top: 20px;
+       box-sizing: content-box;
+
+       transition: all .3s linear;
+
+       input[type=checkbox].task-check {
+           position: relative;
+           float: left;
+           top: 2px;
+           width: 18px;
+           height: 18px;
+           z-index: 3;
+           opacity: 0;
+
+           &:hover {
+               cursor: pointer;
+           }
+
+           &:checked {
+               opacity: 0;
+
+               ~span.checkbox img {
+                   display: block;
+               }
+           }
+       }
+
+       span.checkbox {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           position: absolute;
+           top: 2px;
+           width: 18px;
+           height: 18px;
+           z-index: 2;
+           background-color: #485460;
+
+           img {
+               width: 14px;
+               height: 14px;
+               display: none;
+           }
+       }
+
+       p {
+           float: right;
+           width: 97%;
+           font-size: 18px;
+       }
+
+       .separate-line {
+           display: block;
+           position: relative;
+           width: 95%;
+           height: 1px;
+           margin: 0 auto;
+           top: -20px;
+           background-color: #2f3542;
+
+           transition: width .3s ease;
+       }
+   }
+}

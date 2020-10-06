@@ -6,7 +6,7 @@ import cors = require("cors");
 import path = require("path");
 
 const app = express();
-const tasks = JSON.parse( String( fs.readFileSync(path.join(__dirname, "tasks.json")) ) );
+let tasks: any = JSON.parse(fs.readFileSync(path.join(__dirname, "tasks.json")).toString());
 
 app.use(cors(), express.static(path.resolve(__dirname, "../")));
 
