@@ -6,8 +6,8 @@ const
    input: JQuery = $("#input");
 
 const bg_colors: string[] = [ "#1abc9c", "#27ae60", "#2980b9", "#8e44ad", 
-   "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d" ],
-   text_colors: string[] = [ "#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81" ];
+      "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d" ],
+   text_colors: string[] = [ "#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794" ];
    
 let colorSetting = {
    originalBg: body.css("background-color"),
@@ -32,6 +32,7 @@ let colorSetting = {
 options.find(".help").click(function(event): void {
    if (banner_help.css("display") === "none")
       banner_help.show("fast");
+   options.css("pointer-events", "none");
 });
 
 // Background color change button
@@ -85,6 +86,7 @@ options.find(".textc").click(function(event): void {
 // Help banner close button
 banner_help.find("#close-btn").click(function(event): void {
    $(this).parent().hide("fast");
+   options.css("pointer-events", "all");
 });
 
 // Key tracking
@@ -116,9 +118,22 @@ class Task implements Task {
    public timestamp: number = Date.now();
 
    constructor(content: string) {
-      this.content = content;
+      let task: JQuery = $("<div />", {
+            "class": "task text-col"
+         }),
+         timestamp: JQuery = $("<div />", {
+            html: this.content,
+            "class": "timestamp"
+         }),
+         deleteBtn: JQuery = $("<button />", {
+            html: "Delete",
+            "class": "delete"
+         });
+      
+      task.append(timestamp, deleteBtn);
    }
 }
+// new Task("123");
 
 interface Array<T> {
    has(element: any): boolean;
