@@ -1,7 +1,7 @@
 "use strict";
 const textElements = $(".text-col"), body = $("body"), options = $("#options"), banner_help = $("#banner_help"), input = $("#input");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
-    "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81"];
+    "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
 let colorSetting = {
     originalBg: body.css("background-color"),
     currentBg: body.css("background-color"),
@@ -20,9 +20,11 @@ let colorSetting = {
         this.textIndex = 0;
     }
 };
+// Help banner toggler
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
         banner_help.show("fast");
+    options.css("pointer-events", "none");
 });
 // Background color change button
 options.find(".bgc").click(function (event) {
@@ -67,6 +69,7 @@ options.find(".textc").click(function (event) {
 // Help banner close button
 banner_help.find("#close-btn").click(function (event) {
     $(this).parent().hide("fast");
+    options.css("pointer-events", "all");
 });
 // Key tracking
 $(window).keydown(function (event) {
@@ -87,7 +90,16 @@ $(window).keydown(function (event) {
 class Task {
     constructor(content) {
         this.timestamp = Date.now();
-        this.content = content;
+        let task = $("<div />", {
+            "class": "task text-col"
+        }), timestamp = $("<div />", {
+            html: this.content,
+            "class": "timestamp"
+        }), deleteBtn = $("<button />", {
+            html: "Delete",
+            "class": "delete"
+        });
+        task.append(timestamp, deleteBtn);
     }
 }
 Array.prototype.has = function (element) {
