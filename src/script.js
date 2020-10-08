@@ -20,6 +20,7 @@ let colorSetting = {
         this.textIndex = 0;
     }
 };
+// Help banner toggler
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
         banner_help.show("fast");

@@ -31,6 +31,7 @@ let colorSetting = {
    }
 }
 
+// Help banner toggler
 options.find(".help").click(function(event): void {
    if (banner_help.css("display") === "none")
       banner_help.show("fast");
