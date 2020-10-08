@@ -3,6 +3,8 @@ const
    body: JQuery = $("body"),
    options: JQuery = $("#options"),
    banner_help: JQuery = $("#banner_help"),
+   banner_empty: JQuery = $("#banner-empty"),
+   main_content: JQuery = $(".main-content"),
    input: JQuery = $("#input");
 
 const bg_colors: string[] = [ "#1abc9c", "#27ae60", "#2980b9", "#8e44ad", 
@@ -83,6 +85,13 @@ options.find(".textc").click(function(event): void {
    $("#textcol").css("background-color", colorSetting.currentTextCol);
 });
 
+// Reset colors
+options.find(".reset").click(function(event): void {
+   let keyEvent: JQuery.Event & object = $.Event("keydown");
+   keyEvent.key = "F1";
+   $(window).trigger(keyEvent);
+});
+
 // Help banner close button
 banner_help.find("#close-btn").click(function(event): void {
    $(this).parent().hide("fast");
@@ -93,19 +102,21 @@ banner_help.find("#close-btn").click(function(event): void {
 $(window).keydown(function(event?): void {
    switch (event.key) {
       case "F1":
+         // Reset colors
          event.preventDefault();
          colorSetting.reset();
          break;
       case "Enter":
-         console.log("Task appended!");
+         // Post the task from input
+         postTask();
          break;
       case "Escape":
+         // Close help banner
          if (banner_help.css("display") !== "none")
             banner_help.find("#close-btn").trigger("click");
          break;
    }
 });
-
 
 
 interface Task {
@@ -116,24 +127,30 @@ interface Task {
 class Task implements Task {
    public content: string;
    public timestamp: number = Date.now();
-
+   
    constructor(content: string) {
-      let task: JQuery = $("<div />", {
+      let task: JQuery = $("<div>", {
             "class": "task text-col"
          }),
-         timestamp: JQuery = $("<div />", {
-            html: this.content,
+         timestamp: JQuery = $("<div>", {
+            html: this.timestamp,
             "class": "timestamp"
          }),
-         deleteBtn: JQuery = $("<button />", {
+         taskContent: JQuery = $("<p>", {
+            html: content,
+            "class": ""
+         }),
+         deleteBtn: JQuery = $("<button>", {
             html: "Delete",
             "class": "delete"
          });
-      
-      task.append(timestamp, deleteBtn);
+         
+      task.append(taskContent, timestamp, deleteBtn);
+      main_content.append(task);
+
+      this.content = content;
    }
 }
-// new Task("123");
 
 interface Array<T> {
    has(element: any): boolean;
@@ -141,8 +158,24 @@ interface Array<T> {
 Array.prototype.has = function(element: any): boolean {
    for (let em of this) {
       if (em === element)
-         return true;
+      return true;
    }
-
+   
    return false;
+}
+
+function postTask() {
+   if (input.is(":focus") && String(input.val()).trim() !== "") {
+      if (banner_empty.css("display") !== "none") {
+         banner_empty.css({
+            "top": "55vh",
+            "filter": "opacity(0)"
+         });
+         setTimeout(() => {
+            banner_empty.hide();
+         }, 500);
+      }
+      input.val("");
+      new Task(String(input.val()));
+   }
 }
