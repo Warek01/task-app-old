@@ -1,5 +1,5 @@
 "use strict";
-const textElements = $(".text-col"), body = $("body"), options = $("#options"), banner_help = $("#banner_help"), input = $("#input");
+const textElements = $(".text-col"), body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), input = $("#input");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
     "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
 let colorSetting = {
@@ -66,6 +66,12 @@ options.find(".textc").click(function (event) {
     }
     $("#textcol").css("background-color", colorSetting.currentTextCol);
 });
+// Reset colors
+options.find(".reset").click(function (event) {
+    let keyEvent = $.Event("keydown");
+    keyEvent.key = "F1";
+    $(window).trigger(keyEvent);
+});
 // Help banner close button
 banner_help.find("#close-btn").click(function (event) {
     $(this).parent().hide("fast");
@@ -75,13 +81,16 @@ banner_help.find("#close-btn").click(function (event) {
 $(window).keydown(function (event) {
     switch (event.key) {
         case "F1":
+            // Reset colors
             event.preventDefault();
             colorSetting.reset();
             break;
         case "Enter":
-            console.log("Task appended!");
+            // Post the task from input
+            postTask();
             break;
         case "Escape":
+            // Close help banner
             if (banner_help.css("display") !== "none")
                 banner_help.find("#close-btn").trigger("click");
             break;
@@ -90,16 +99,21 @@ $(window).keydown(function (event) {
 class Task {
     constructor(content) {
         this.timestamp = Date.now();
-        let task = $("<div />", {
+        let task = $("<div>", {
             "class": "task text-col"
-        }), timestamp = $("<div />", {
-            html: this.content,
+        }), timestamp = $("<div>", {
+            html: this.timestamp,
             "class": "timestamp"
-        }), deleteBtn = $("<button />", {
+        }), taskContent = $("<p>", {
+            html: content,
+            "class": ""
+        }), deleteBtn = $("<button>", {
             html: "Delete",
             "class": "delete"
         });
-        task.append(timestamp, deleteBtn);
+        task.append(taskContent, timestamp, deleteBtn);
+        main_content.append(task);
+        this.content = content;
     }
 }
 Array.prototype.has = function (element) {
@@ -109,3 +123,18 @@ Array.prototype.has = function (element) {
     }
     return false;
 };
+function postTask() {
+    if (input.is(":focus") && String(input.val()).trim() !== "") {
+        if (banner_empty.css("display") !== "none") {
+            banner_empty.css({
+                "top": "55vh",
+                "filter": "opacity(0)"
+            });
+            setTimeout(() => {
+                banner_empty.hide();
+            }, 500);
+        }
+        input.val("");
+        new Task(String(input.val()));
+    }
+}
