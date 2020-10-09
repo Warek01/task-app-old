@@ -99,6 +99,16 @@ banner_help.find("#close-btn").click(function(event): void {
    options.css("pointer-events", "all");
 });
 
+// Main input extention when focused
+input.find(".wrapper").focusin(function(event): void {
+   $(this).find("input[type=text]").css("width", 625);
+   $(this).css("width", 700);
+}).focusout(function(event): void {
+   $(this).find("input[type=text]").css("width", 370);
+   $(this).css("width", 470);
+});
+
+
 // Key tracking
 $(window).keydown(function(event?): void {
    switch (event.key) {
@@ -127,29 +137,71 @@ interface Task {
 
 class Task implements Task {
    public content: string;
-   public timestamp: number = Date.now();
+   public timestamp: number;
    
-   constructor(content: string) {
+   constructor(content: string, timestamp_: number = Date.now()) {
+
+      this.timestamp = timestamp_;
+
       let task: JQuery = $("<div>", {
             "class": "task text-col"
          }),
          timestamp: JQuery = $("<div>", {
-            html: this.timestamp,
+            html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
+               ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()} <br>
+               ${new Date(this.timestamp).getHours()} : ${new Date(this.timestamp).getMinutes()}`,
             "class": "timestamp"
          }),
          taskContent: JQuery = $("<p>", {
-            html: content,
-            "class": ""
+            html: "&nbsp; " + content,
+            "class": "content text-col"
          }),
          deleteBtn: JQuery = $("<button>", {
             html: "Delete",
             "class": "delete"
          });
+
+      deleteBtn.click(function(event): void {
+         $(this).parent().hide("fast");
+
+         setTimeout(() => {
+            $(this).parent().remove();
+         }, 500);
+      });
          
       task.append(taskContent, timestamp, deleteBtn);
       main_content.append(task);
 
       this.content = content;
+   }
+
+   static getDay(date: number): string {
+      switch(date) {
+         case 1: return "Mon";
+         case 2: return "Tue";
+         case 3: return "Wed";
+         case 4: return "Thu";
+         case 5: return "Fri";
+         case 6: return "Sat";
+         case 7: return "Sun";
+      }
+   }
+
+   static getMonth(month: number): string {
+      switch(month) {
+         case 0: return "Jan";
+         case 1: return "Feb";
+         case 2: return "Mar";
+         case 3: return "Apr";
+         case 4: return "May";
+         case 5: return "Jun";
+         case 6: return "Jul";
+         case 7: return "Aug";
+         case 8: return "Sep";
+         case 9: return "Oct";
+         case 10: return "Nov";
+         case 11: return "Dec";
+      }
    }
 }
 
@@ -159,14 +211,16 @@ interface Array<T> {
 Array.prototype.has = function(element: any): boolean {
    for (let em of this) {
       if (em === element)
-      return true;
+         return true;
    }
    
    return false;
 }
 
 function postTask() {
-   if (input.is(":focus") && String(input.val()).trim() !== "") {
+   // Text field
+   let textInput: JQuery = input.find("input");
+   if (textInput.is(":focus") && String(textInput.val()).trim() !== "") {
       if (banner_empty.css("display") !== "none") {
          banner_empty.css({
             "top": "55vh",
@@ -176,7 +230,7 @@ function postTask() {
             banner_empty.hide();
          }, 500);
       }
-      input.val("");
-      new Task(String(input.val()));
+      new Task(String(textInput.val()));
+      textInput.val("");
    }
 }
