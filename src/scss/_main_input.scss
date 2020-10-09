@@ -1,4 +1,4 @@
-.input {
+#input {
 
    position: relative;
    display: block;
@@ -7,12 +7,15 @@
 
    .wrapper {
       position: relative;
-      display: block;
+      display: flex;
+      justify-content: space-between;
       height: 50px;
       width: 470px;
       margin: 0 auto;
       background-color: #485460;
       border-radius: 25px;
+      overflow: hidden;
+      transition: width .5s ease;
 
       img {
          position: relative;
@@ -37,6 +40,7 @@
       font-size: 16px;
       border: none;
       background-color: #485460;
+      transition: width .6s ease;
 
       &:focus {
          outline: none;

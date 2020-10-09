@@ -175,22 +175,25 @@ header #options:focus {
   outline: none;
 }
 
-.input {
+#input {
   position: relative;
   display: block;
   height: 50px;
   margin-top: 50px;
 }
-.input .wrapper {
+#input .wrapper {
   position: relative;
-  display: block;
+  display: flex;
+  justify-content: space-between;
   height: 50px;
   width: 470px;
   margin: 0 auto;
   background-color: #485460;
   border-radius: 25px;
+  overflow: hidden;
+  transition: width .5s ease;
 }
-.input .wrapper img {
+#input .wrapper img {
   position: relative;
   display: block;
   float: left;
@@ -201,7 +204,7 @@ header #options:focus {
   max-width: 40px;
   max-height: 40px;
 }
-.input input[type=text] {
+#input input[type=text] {
   position: relative;
   display: block;
   width: 370px;
@@ -211,11 +214,12 @@ header #options:focus {
   font-size: 16px;
   border: none;
   background-color: #485460;
+  transition: width .6s ease;
 }
-.input input[type=text]:focus {
+#input input[type=text]:focus {
   outline: none;
 }
-.input input[type=text]::placeholder {
+#input input[type=text]::placeholder {
   color: #fff;
   font-size: 14px;
   letter-spacing: 1px;
@@ -233,10 +237,19 @@ header #options:focus {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 50px;
+  min-height: 100px;
   margin-top: 20px;
   box-sizing: content-box;
   transition: all .3s linear;
+}
+.main-content .task .content {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  border-bottom: 1px solid #333;
+}
+.main-content .task .content::first-letter {
+  text-transform: uppercase;
 }
 .main-content .task input[type=checkbox].task-check {
   position: relative;
