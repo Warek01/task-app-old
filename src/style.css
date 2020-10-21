@@ -6,6 +6,9 @@
   margin: 0;
   padding: 0;
 }
+*::selection {
+  background-color: rgba(85, 230, 193, 0.75);
+}
 
 body {
   background-color: #bdc3c7;
@@ -68,7 +71,6 @@ header .logo {
   font-family: 'Baloo Tamma 2', cursive;
   font-weight: bold;
   line-height: 1.15;
-  user-select: none;
 }
 header #options {
   display: flex;
@@ -181,19 +183,20 @@ header #options:focus {
   height: 50px;
   width: 100%;
   justify-content: center;
-  margin-top: 50px auto 0 auto;
+  margin-top: 50px;
 }
 #input .wrapper {
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   height: 50px;
   width: 470px;
-  margin: 0 auto;
+  margin-left: 120px;
   background-color: #485460;
   border-radius: 25px;
   overflow: hidden;
   transition: width .5s ease;
+  z-index: 6;
 }
 #input .wrapper img {
   position: relative;
@@ -231,11 +234,35 @@ header #options:focus {
   position: relative;
   height: 50px;
   width: 100px;
+  left: -10px;
   color: #fff;
   text-transform: uppercase;
   background-color: #485460;
   outline: none;
   border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all .3s ease;
+  z-index: 2;
+}
+#input #insert:hover {
+  background-color: #1e90ff;
+  box-shadow: 0 0 30px rgba(30, 144, 255, 0.75);
+}
+#input #insert .circle {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  left: -35px;
+  height: 50px;
+  width: 50px;
+  background-color: #bdc3c7;
+  z-index: 3;
+  transition: background-color .2s ease;
+}
+#input #insert span {
+  position: relative;
+  left: 7px;
 }
 
 .main-content {
@@ -260,8 +287,14 @@ header #options:focus {
   min-height: 30px;
   border-bottom: 1px solid #333;
 }
-.main-content .task .content::first-letter {
-  text-transform: uppercase;
+.main-content .task .timestamp {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 250px;
+  word-spacing: 5px;
+  letter-spacing: 1.5px;
+  color: #eee;
 }
 .main-content .task input[type=checkbox].task-check {
   position: relative;

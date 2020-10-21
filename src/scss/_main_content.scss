@@ -22,9 +22,19 @@
             min-height: 30px;
             border-bottom: 1px solid #333;
 
-            &::first-letter {
-                text-transform: uppercase;
-            }
+            // &::first-letter {
+            //     text-transform: uppercase;
+            // }
+        }
+
+        .timestamp {
+            position: relative;
+            display: inline-block;
+            height: 30px;
+            width: 250px;
+            word-spacing: 5px;
+            letter-spacing: 1.5px;
+            color: #eee;
         }
 
         input[type=checkbox].task-check {

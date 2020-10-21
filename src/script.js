@@ -1,7 +1,8 @@
 "use strict";
-const textElements = $(".text-col"), body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), input = $("#input");
+const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), input = $("#input");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
     "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
+let textElements = $(".text-col");
 let colorSetting = {
     originalBg: body.css("background-color"),
     currentBg: body.css("background-color"),
@@ -43,7 +44,9 @@ options.find(".bgc").click(function (event) {
         colorSetting.bgIndex++;
         body.css("background-color", bg_colors[colorSetting.bgIndex]);
         colorSetting.currentBg = bg_colors[colorSetting.bgIndex];
+        $(".circle-bgc").css("background-color", bg_colors[colorSetting.bgIndex]);
     }
+    $(".circle-bgc").css("background-color", colorSetting.currentBg);
     $("#bgcol").css("background-color", colorSetting.currentBg);
 });
 // Text color change button
@@ -85,6 +88,13 @@ input.find(".wrapper").focusin(function (event) {
     $(this).find("input[type=text]").css("width", 370);
     $(this).css("width", 470);
 });
+// Insert Button
+input.find("#insert").click(function (e) {
+    console.log("Press!");
+    let keyEvent = $.Event("keydown");
+    keyEvent.key = "Enter";
+    $(window).trigger(keyEvent);
+});
 // Key tracking
 $(window).keydown(function (event) {
     switch (event.key) {
@@ -111,7 +121,7 @@ class Task {
             "class": "task text-col"
         }), timestamp = $("<div>", {
             html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
-               ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()} <br>
+               ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()}
                ${new Date(this.timestamp).getHours()} : ${new Date(this.timestamp).getMinutes()}`,
             "class": "timestamp"
         }), taskContent = $("<p>", {
@@ -140,6 +150,7 @@ class Task {
                 setTimeout(() => $(this).parent().remove(), 500);
             }
         });
+        taskContent.css("color", colorSetting.currentTextCol);
         task.append(taskContent, timestamp, deleteBtn);
         main_content.append(task);
         this.content = content;
@@ -182,7 +193,7 @@ Array.prototype.has = function (element) {
 function postTask() {
     // Text field
     let textInput = input.find("input");
-    if (textInput.is(":focus") && String(textInput.val()).trim() !== "") {
+    if ((textInput.is(":focus") || $("#insert").is(":focus")) && String(textInput.val()).trim() !== "") {
         if (banner_empty.css("display") !== "none") {
             banner_empty.css({
                 "top": "55vh",
@@ -195,4 +206,5 @@ function postTask() {
         new Task(String(textInput.val()));
         textInput.val("");
     }
+    textElements = $(".text-col");
 }
