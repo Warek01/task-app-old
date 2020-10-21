@@ -161,12 +161,24 @@ class Task implements Task {
             "class": "delete"
          });
 
+      // Task delete logic
       deleteBtn.click(function(event): void {
          $(this).parent().hide("fast");
+         if (main_content.find(".task").length <= 1) {
+            if (banner_empty.css("display") === "none") {
+               banner_empty.show("fast");
+            }
 
-         setTimeout(() => {
-            $(this).parent().remove();
-         }, 500);
+            setTimeout(() => {
+               $(this).parent().remove();
+               banner_empty.css({
+                  "filter": "opacity(1)",
+                  "top": "45vh"
+               });
+            }, 500);
+         } else {
+            setTimeout(() => $(this).parent().remove(), 500);
+         }
       });
          
       task.append(taskContent, timestamp, deleteBtn);

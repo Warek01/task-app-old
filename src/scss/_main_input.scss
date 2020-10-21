@@ -1,9 +1,11 @@
 #input {
 
    position: relative;
-   display: block;
+   display: flex;
    height: 50px;
-   margin-top: 50px;
+   width: 100%;
+   justify-content: center;
+   margin-top: 50px auto 0 auto;
 
    .wrapper {
       position: relative;
@@ -54,5 +56,15 @@
       }
 
    }
-
+   
+   #insert {
+      position: relative;
+      height: 50px;
+      width: 100px;
+      color: #fff;
+      text-transform: uppercase;
+      background-color: #485460;
+      outline: none;
+      border: none;
+   }
 }
