@@ -16,7 +16,7 @@
         </div>
         <div class="logo">
             <p>
-                task
+                to do
             </p>
         </div>
         <div id="options">
@@ -26,23 +26,28 @@
                     <li class="text-col help"><p>Help</p></li>
                     <li class="text-col bgc"><p>Change background color</p> <div id="bgcol"></li>
                     <li class="text-col textc"><p>Change text color</p> <div id="textcol"></li>
+                    <li class="text-col reset"><p>Reset</li>
                 </ul>
             </button>
         </div>
     </header>
 
-    <div class="input">
+    <div id="input">
         <div class="wrapper">
             <img src="./src/img/ok-48.png" alt="">
-            <input type="text" placeholder="Enter your to do task here" name="text-input" id="input" class="text-col">
+            <input type="text" placeholder="Write something to do" name="text-input" class="text-col">
         </div>
+        <button id="insert">
+            <div class="circle"></div>
+            Instert
+        </button>
     </div>
 
     <div id="banner-empty" class="text-col">
-        <h1>No tasks yet</h1>
+        <h1>No content yet</h1>
     </div>
 
-    <div class="main-content">
+    <div class="main-content text-col">
         
     </div>
 
@@ -50,7 +55,7 @@
         <div class="node text-col"><p>Press <kbd>Enter</kbd> to insert task.</p></div>
         <div class="node text-col"><p>Press <kbd>Delete</kbd> to delete task.</p></div>
         <div class="node text-col"><p>Press <kbd>F1</kbd> to reset colors.</p></div>
-        <div class="node text-col"></div>
+        <div class="node text-col"><p>Press <kbd>Esc</kbd> to exit this window.</p></div>
         <div class="node text-col"></div>
         <div class="node text-col"></div>
         <button id="close-btn">close</button>
