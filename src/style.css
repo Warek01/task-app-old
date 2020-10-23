@@ -71,6 +71,7 @@ header .logo {
   font-family: 'Baloo Tamma 2', cursive;
   font-weight: bold;
   line-height: 1.15;
+  cursor: default;
 }
 header #options {
   display: flex;
@@ -110,7 +111,7 @@ header #options button ul.content {
   margin-top: 15px;
   height: 0;
   width: 120px;
-  z-index: 3;
+  z-index: 999;
   background-color: #0a3d62;
   font-size: 14px;
   text-align: center;
@@ -270,30 +271,63 @@ header #options:focus {
   box-sizing: content-box;
   width: 95%;
   min-height: 100px;
-  margin: 80px auto 0 auto;
+  margin: 50px auto 0 auto;
+  overflow-x: hidden;
 }
 .main-content .task {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 100px;
-  margin-top: 20px;
+  height: 75px;
+  margin-top: 15px;
   box-sizing: content-box;
-  transition: all .3s linear;
+  border-radius: 5px;
+  transition: all .3s linear, border 0s, height .25s;
+}
+.main-content .task:hover {
+  border: 1px solid rgba(51, 51, 51, 0.35);
+  height: 100px;
+}
+.main-content .task:hover .content {
+  height: 50px;
+  font-size: 1.35em;
+}
+.main-content .task:hover .content::after {
+  width: 98%;
+}
+.main-content .task:first-child {
+  margin-top: 0;
+}
+.main-content .task:nth-of-type(2n - 1) {
+  background-color: rgba(51, 51, 51, 0.1);
 }
 .main-content .task .content {
+  position: relative;
   display: block;
   width: 100%;
-  min-height: 30px;
-  border-bottom: 1px solid #333;
+  height: 30px;
+  margin-top: 10px;
+}
+.main-content .task .content::after {
+  content: "";
+  position: absolute;
+  display: block;
+  bottom: 0;
+  width: 20%;
+  height: 1px;
+  margin: 1% 0 0 10px;
+  background-color: rgba(47, 53, 66, 0.25);
+  transition: width .3s ease;
 }
 .main-content .task .timestamp {
   position: relative;
   display: inline-block;
   height: 30px;
   width: 250px;
-  word-spacing: 5px;
-  letter-spacing: 1.5px;
+  margin-top: 7px;
+  margin-left: 1%;
+  word-spacing: 2px;
+  letter-spacing: 1px;
   color: #eee;
 }
 .main-content .task input[type=checkbox].task-check {
@@ -332,8 +366,9 @@ header #options:focus {
 }
 .main-content .task p {
   float: right;
-  width: 97%;
+  width: 96%;
   font-size: 18px;
+  margin-left: 1.5%;
 }
 .main-content .task .separate-line {
   display: block;
@@ -351,7 +386,7 @@ header #options:focus {
   display: flex;
   width: 95%;
   height: 100px;
-  top: 45vh;
+  top: 42.5vh;
   margin: 0 2.5% 0 2.5%;
   text-align: center;
   justify-content: center;

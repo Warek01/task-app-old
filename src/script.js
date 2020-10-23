@@ -2,19 +2,20 @@
 const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), input = $("#input");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
     "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
-let textElements = $(".text-col");
+let tempTextElements = $(".text-col");
 let colorSetting = {
     originalBg: body.css("background-color"),
     currentBg: body.css("background-color"),
     bgIndex: 0,
-    originalTextCol: textElements.eq(0).css("color"),
-    currentTextCol: textElements.eq(0).css("color"),
+    originalTextCol: tempTextElements.eq(0).css("color"),
+    currentTextCol: tempTextElements.eq(0).css("color"),
     textIndex: 0,
     reset() {
         body.css("background-color", this.originalBg);
-        textElements.css("color", this.originalTextCol);
-        $("#textcol").css("background-color", colorSetting.originalTextCol);
-        $("#bgcol").css("background-color", colorSetting.originalBg);
+        tempTextElements.css("color", this.originalTextCol);
+        $("#textcol").css("background-color", this.originalTextCol);
+        $("#bgcol").css("background-color", this.originalBg);
+        $(".circle-bgc").css("background-color", this.originalBg);
         this.currentBg = this.originalBg;
         this.currentTextCol = this.originalTextCol;
         this.bgIndex = 0;
@@ -38,7 +39,8 @@ options.find(".bgc").click(function (event) {
             body.css("background-color", colorSetting.originalBg);
             colorSetting.bgIndex = 0;
             colorSetting.currentBg = colorSetting.originalBg;
-            $("#bgcol").css("backgriund-color", colorSetting.currentBg);
+            $("#bgcol").css("background-color", colorSetting.currentBg);
+            $(".circle-bgc").css("background-color", colorSetting.currentBg);
             return;
         }
         colorSetting.bgIndex++;
@@ -52,19 +54,19 @@ options.find(".bgc").click(function (event) {
 // Text color change button
 options.find(".textc").click(function (event) {
     if (colorSetting.currentTextCol === colorSetting.originalTextCol) {
-        textElements.css("color", text_colors[0]);
+        tempTextElements.css("color", text_colors[0]);
         colorSetting.currentTextCol = text_colors[0];
     }
     else if (text_colors.has(colorSetting.currentTextCol)) {
         if (colorSetting.currentTextCol === text_colors[text_colors.length - 1]) {
-            textElements.css("color", colorSetting.originalTextCol);
+            tempTextElements.css("color", colorSetting.originalTextCol);
             colorSetting.textIndex = 0;
             colorSetting.currentTextCol = colorSetting.originalTextCol;
             $("#textcol").css("background-color", colorSetting.currentTextCol);
             return;
         }
         colorSetting.textIndex++;
-        textElements.css("color", text_colors[colorSetting.textIndex]);
+        tempTextElements.css("color", text_colors[colorSetting.textIndex]);
         colorSetting.currentTextCol = text_colors[colorSetting.textIndex];
     }
     $("#textcol").css("background-color", colorSetting.currentTextCol);
@@ -112,17 +114,20 @@ $(window).keydown(function (event) {
             if (banner_help.css("display") !== "none")
                 banner_help.find("#close-btn").trigger("click");
             break;
+        case "Delete":
+            $(".task").first().find("button.delete").trigger("click");
+            break;
     }
 });
 class Task {
-    constructor(content, timestamp_ = Date.now()) {
-        this.timestamp = timestamp_;
+    constructor(content, timestamp = Date.now()) {
+        this.timestamp = timestamp;
         let task = $("<div>", {
             "class": "task text-col"
-        }), timestamp = $("<div>", {
+        }), taskTimestamp = $("<div>", {
             html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
                ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()}
-               ${new Date(this.timestamp).getHours()} : ${new Date(this.timestamp).getMinutes()}`,
+               ${new Date(this.timestamp).getHours()}:${new Date(this.timestamp).getMinutes()}`,
             "class": "timestamp"
         }), taskContent = $("<p>", {
             html: "&nbsp; " + content,
@@ -130,30 +135,47 @@ class Task {
         }), deleteBtn = $("<button>", {
             html: "Delete",
             "class": "delete"
+        }), editBtn = $("<button>", {
+            html: "Edit",
+            "class": "edit"
+        }), copyBtn = $("<button>", {
+            html: "Copy text",
+            "class": "copy"
         });
         // Task delete logic
         deleteBtn.click(function (event) {
-            $(this).parent().hide("fast");
-            if (main_content.find(".task").length <= 1) {
-                if (banner_empty.css("display") === "none") {
-                    banner_empty.show("fast");
-                }
-                setTimeout(() => {
+            $(this).parent().hide("slow", () => {
+                if (main_content.find(".task").length <= 1) {
+                    if (banner_empty.css("display") === "none")
+                        banner_empty.show("fast");
                     $(this).parent().remove();
                     banner_empty.css({
                         "filter": "opacity(1)",
                         "top": "45vh"
                     });
-                }, 500);
-            }
-            else {
-                setTimeout(() => $(this).parent().remove(), 500);
-            }
+                }
+                else
+                    $(this).parent().remove();
+            });
+        });
+        copyBtn.click(function (event) {
+            let input = $("<input type=\"text\">", {
+                type: "text",
+                value: 
+            });
+            console.log(input);
+            document.execCommand("copy");
         });
         taskContent.css("color", colorSetting.currentTextCol);
-        task.append(taskContent, timestamp, deleteBtn);
+        task.append(taskContent, taskTimestamp, deleteBtn, editBtn, copyBtn);
         main_content.append(task);
         this.content = content;
+        this.element = task;
+    }
+    // Task jquery css
+    css(prop, value = null) {
+        value ? this.element.css(prop, value) : this.element.css(prop);
+        return this;
     }
     static getDay(date) {
         switch (date) {
@@ -206,5 +228,5 @@ function postTask() {
         new Task(String(textInput.val()));
         textInput.val("");
     }
-    textElements = $(".text-col");
+    tempTextElements = $(".text-col");
 }

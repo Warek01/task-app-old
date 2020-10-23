@@ -58,4 +58,4 @@ function nodeArgs(): {port: string, port_log(): void} {
       }
    };
 }
-nodeArgs().port_log()
+nodeArgs().port_log();

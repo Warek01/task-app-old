@@ -36,6 +36,7 @@ header {
         font-family: 'Baloo Tamma 2', cursive;
         font-weight: bold;
         line-height: 1.15;
+        cursor: default;
     }
 
     #options {
@@ -78,7 +79,7 @@ header {
                 margin-top: 15px;
                 height: 0;
                 width: 120px;
-                z-index: 3;
+                z-index: 999;
                 background-color: #0a3d62;
                 font-size: 14px;
                 text-align: center;
