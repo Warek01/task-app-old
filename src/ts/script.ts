@@ -4,7 +4,10 @@ options: JQuery = $("#options"),
 banner_help: JQuery = $("#banner_help"),
 banner_empty: JQuery = $("#banner-empty"),
 main_content: JQuery = $(".main-content"),
-input: JQuery = $("#input");
+modal: JQuery = $(".modal"),
+inputDiv: JQuery = $("#input"),
+inputElement: JQuery = inputDiv.find("input"),
+inputCopy: JQuery = $("#input-copy");
 
 const bg_colors: string[] = [ "#1abc9c", "#27ae60", "#2980b9", "#8e44ad", 
 "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d" ],
@@ -104,7 +107,7 @@ banner_help.find("#close-btn").click(function(event): void {
 });
 
 // Main input extention when focused
-input.find(".wrapper").focusin(function(event): void {
+inputDiv.find(".wrapper").focusin(function(event): void {
    $(this).find("input[type=text]").css("width", 625);
    $(this).css("width", 700);
 }).focusout(function(event): void {
@@ -113,7 +116,7 @@ input.find(".wrapper").focusin(function(event): void {
 });
 
 // Insert Button
-input.find("#insert").click(function(e): void {
+inputDiv.find("#insert").click(function(e): void {
    console.log("Press!");
    let keyEvent: JQuery.Event & object = $.Event("keydown");
    keyEvent.key = "Enter";
@@ -143,114 +146,6 @@ $(window).keydown(function(event?): void {
    }
 });
 
-
-interface Task {
-   content: string;
-   element: JQuery;
-   timestamp: number;
-}
-
-class Task implements Task {
-   public content: string;
-   
-   constructor(content: string, public timestamp: number = Date.now()) {
-
-      let task: JQuery = $("<div>", {
-            "class": "task text-col"
-         }),
-         taskTimestamp: JQuery = $("<div>", {
-            html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
-               ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()}
-               ${new Date(this.timestamp).getHours()}:${new Date(this.timestamp).getMinutes()}`,
-            "class": "timestamp"
-         }),
-         taskContent: JQuery = $("<p>", {
-            html: "&nbsp; " + content,
-            "class": "content text-col"
-         }),
-         deleteBtn: JQuery = $("<button>", {
-            html: "Delete",
-            "class": "delete"
-         }),
-         editBtn: JQuery = $("<button>", {
-            html: "Edit",
-            "class": "edit"
-         }),
-         copyBtn: JQuery = $("<button>", {
-            html: "Copy text",
-            "class": "copy"
-         });
-
-      // Task delete logic
-      deleteBtn.click(function(event): void {
-         $(this).parent().hide("slow", () => {
-            if (main_content.find(".task").length <= 1) {
-               if (banner_empty.css("display") === "none") 
-                  banner_empty.show("fast");
-
-               $(this).parent().remove();
-               banner_empty.css({
-                  "filter": "opacity(1)",
-                  "top": "45vh"
-               });
-            } else 
-               $(this).parent().remove();
-         });
-      });
-
-      copyBtn.click(function(event): void {
-         let input = $("<input type=\"text\">", {
-            type: "text",
-            value: 
-         })
-         console.log(input)
-         document.execCommand("copy");
-      });
-         
-      taskContent.css("color", colorSetting.currentTextCol);
-      task.append(taskContent, taskTimestamp, deleteBtn, editBtn, copyBtn);
-      main_content.append(task);
-
-      this.content = content;
-      this.element = task;
-   }
-
-   // Task jquery css
-   css(prop: string, value: string | number | null = null): this {
-      value? this.element.css(prop, value) : this.element.css(prop); 
-      return this;
-   } 
-
-   static getDay(date: number): string {
-      switch(date) {
-         case 1: return "Mon";
-         case 2: return "Tue";
-         case 3: return "Wed";
-         case 4: return "Thu";
-         case 5: return "Fri";
-         case 6: return "Sat";
-         case 7: return "Sun";
-      }
-   }
-
-   static getMonth(month: number): string {
-      switch(month) {
-         case 0: return "Jan";
-         case 1: return "Feb";
-         case 2: return "Mar";
-         case 3: return "Apr";
-         case 4: return "May";
-         case 5: return "Jun";
-         case 6: return "Jul";
-         case 7: return "Aug";
-         case 8: return "Sep";
-         case 9: return "Oct";
-         case 10: return "Nov";
-         case 11: return "Dec";
-      }
-   }
-}
-
 interface Array<T> {
    has(element: any): boolean;
 }
@@ -265,7 +160,7 @@ Array.prototype.has = function(element: any): boolean {
 
 function postTask() {
    // Text field
-   let textInput: JQuery = input.find("input");
+   let textInput: JQuery = inputDiv.find("input");
    if ((textInput.is(":focus") || $("#insert").is(":focus")) && String(textInput.val()).trim() !== "") {
       if (banner_empty.css("display") !== "none") {
          banner_empty.css({
@@ -280,4 +175,13 @@ function postTask() {
       textInput.val("");
    }
    tempTextElements = $(".text-col");
+}
+
+function showModalWindow(): void {
+   modal.css("transition", "filter 0s");
+   modal.css("filter", "opacity(1)");
+   setTimeout(() => {
+      modal.css("filter", "opacity(0)");
+      modal.css("transition", "filter .3s ease");
+   }, 750);
 }

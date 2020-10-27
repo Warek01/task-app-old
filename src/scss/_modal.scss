@@ -1,0 +1,36 @@
+.modal {
+   position: absolute;
+   display: grid;
+   width: 350px;
+   height: 100px;
+   top: 20px;
+   left: 20px;
+   z-index: 995;
+   grid-template-columns: 1fr 2fr;
+   align-content: center;
+   justify-content: center;
+   background-color: rgba(#4cd137, .9);
+   border-radius: 5px;
+   pointer-events: none;
+   filter: opacity(0);
+
+   transition: all .3s ease, filter 0s;
+
+   span.content {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      right: 50px;
+      color: #fff;
+      font-size: 1.5em;
+   }
+
+   img {
+      position: relative;
+      left: 110px;
+      bottom: 5px;
+      width: 36px;
+      height: 36px;
+   }
+}
