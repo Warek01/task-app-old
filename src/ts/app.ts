@@ -4,18 +4,46 @@ import fs = require("fs");
 import bodyParser = require("body-parser");
 import cors = require("cors");
 import path = require("path");
+import ejs = require("ejs");
 
 const app = express();
 
 let tasks: any = JSON.parse(fs.readFileSync(path.join(__dirname, "tasks.json")).toString());
 
 nodeArgs();
-app.use(cors(), express.static(path.resolve(__dirname, "../")));
+app.use(cors());
+app.set("view engine", "ejs");
 
-app.route("/tasks").get((req, res, next): void => {
+app.route("/").get((req, res, next): void => {
+   res.render(path.join(__dirname, "views", "index.ejs"), {tasks: tasks});
+}).post(express.json({strict: true}), express.urlencoded({extended: true}), (req, res, next): void => {
+   try {
+      // Get request body (task)
+      let body: {content: string, timestamp: string} = req.body;
+      // Push gotten task to local memory tasks array
+      tasks.tasks.push(body);
+      // Overwrite static memory file with local memory tasks array
+      fs.writeFileSync(path.join(__dirname, "tasks.json"), JSON.stringify(tasks, null, 2));
 
-}).post(express.json({strict: false}), express.urlencoded({extended: true}), (req, res, next): void => {
-
+   } catch(error) {
+      console.log(error);
+      res.end("Error");
+      return;
+   }
+   res.end("Success");
+}).delete((req, res, next) => {
+   try {
+      let index: number = Number(req.query.index);
+      // Remove item from array
+      tasks.tasks.splice(index, 1);
+      // Overwrite static memory file with local memory tasks array
+      fs.writeFileSync(path.join(__dirname, "tasks.json"), JSON.stringify(tasks, null, 2));
+   } catch(error) {
+      console.log(error);
+      res.end("Error");
+      return;
+   }
+   res.end("Success");
 });
 
 app.listen(nodeArgs().port, nodeArgs().port_log);
@@ -58,4 +86,5 @@ function nodeArgs(): {port: string, port_log(): void} {
       }
    };
 }
-nodeArgs().port_log();
+
+app.use(express.static(path.resolve(__dirname, "../")));

@@ -37,10 +37,24 @@ class Task implements Task {
 
       // Task delete logic
       deleteBtn.click(function(event): void {
+
+         let index = 0;
+            for (let em of main_content.children(".task")) {
+               if ($(em).text() === $(this).parent().text())
+                  break;
+               index++;
+            }
+            console.log(index)
+            fetch(`/?index=${index}`, {
+               method: "DELETE"
+            }).then(res => res.text()).then(res => console.log(res));
+
          $(this).parent().hide("slow", () => {
             if (main_content.find(".task").length <= 1) {
                if (banner_empty.css("display") === "none") 
                   banner_empty.show("fast");
+
+               
 
                $(this).parent().remove();
                banner_empty.css({
@@ -49,6 +63,8 @@ class Task implements Task {
                });
             } else 
                $(this).parent().remove();
+
+            showModalWindow();
          });
       });
 

@@ -22,6 +22,15 @@ let colorSetting = {
         this.textIndex = 0;
     }
 };
+// If there are any tasks from the server
+// Make them tasks with Task Class and remove them
+if ($(".task-from-server").length > 0) {
+    let tasks = $(".task-from-server");
+    for (let em of tasks) {
+        postTask($(em).find(".content").text().trim(), Number($(em).find(".timestamp").text().trim()));
+        $(em).remove();
+    }
+}
 // Help banner toggler
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
@@ -126,26 +135,43 @@ Array.prototype.has = function (element) {
     }
     return false;
 };
-function postTask() {
+function postTask(content = null, timestamp = null) {
     // Text field
-    let textInput = inputDiv.find("input");
-    if ((textInput.is(":focus") || $("#insert").is(":focus")) && String(textInput.val()).trim() !== "") {
-        if (banner_empty.css("display") !== "none") {
-            banner_empty.css({
-                "top": "55vh",
-                "filter": "opacity(0)"
-            });
-            setTimeout(() => {
-                banner_empty.hide();
-            }, 500);
+    let textInput = inputDiv.find("input"), task;
+    if (!content && !timestamp) {
+        if ((textInput.is(":focus") || $("#insert").is(":focus")) && textInput.val().toString().trim() !== "") {
+            if (banner_empty.css("display") !== "none") {
+                banner_empty.css({
+                    "top": "55vh",
+                    "filter": "opacity(0)"
+                });
+                setTimeout(() => {
+                    banner_empty.hide();
+                }, 500);
+            }
+            task = new Task(String(textInput.val()).trim());
+            textInput.val("");
         }
-        new Task(String(textInput.val()));
-        textInput.val("");
+        tempTextElements = $(".text-col");
+        // Send the new task to server
+        fetch("/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ content: task.content, timestamp: task.timestamp })
+        }).then(res => res.text()).then(res => {
+            console.log(res);
+        });
     }
-    tempTextElements = $(".text-col");
+    else {
+        // If task is present (received from the server)
+        // Only make it, no post and send
+        new Task(content, timestamp);
+    }
 }
 function showModalWindow() {
-    modal.css("transition", "filter 0s");
+    modal.css("transition", "filter 75ms linear");
     modal.css("filter", "opacity(1)");
     setTimeout(() => {
         modal.css("filter", "opacity(0)");
