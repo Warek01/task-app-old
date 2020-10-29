@@ -1,7 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;700&display=swap");
-/* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
-/* font-family: 'Open Sans', sans-serif; -Content- */
 * {
   margin: 0;
   padding: 0;
@@ -29,12 +27,34 @@ h1, h2, h3, h4, h5, h6 {
 
 kbd {
   display: inline-block;
+  font-family: "Fira Code";
+  font-weight: 300;
   text-indent: 0;
+  margin: 0 2px 0 2px;
+  padding: 2px 5px 2px 5px;
   color: #fff;
   background-color: rgba(24, 17, 17, 0.863);
   border-radius: 5px;
 }
 
+/* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
+/* font-family: 'Open Sans', sans-serif; -Content- */
+@font-face {
+  font-family: 'Fira Code';
+  src: url("fonts/subset-FiraCode-Regular.eot");
+  src: local("Fira Code Regular"), local("FiraCode-Regular"), url("fonts/subset-FiraCode-Regular.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Regular.woff2") format("woff2"), url("fonts/subset-FiraCode-Regular.woff") format("woff"), url("fonts/subset-FiraCode-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Fira Code';
+  src: url("fonts/subset-FiraCode-Light.eot");
+  src: local("Fira Code Light"), local("FiraCode-Light"), url("fonts/subset-FiraCode-Light.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Light.woff2") format("woff2"), url("fonts/subset-FiraCode-Light.woff") format("woff"), url("fonts/subset-FiraCode-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: fallback;
+}
 .modal {
   position: absolute;
   display: grid;
@@ -315,16 +335,15 @@ header #options:focus {
   margin-top: 15px;
   box-sizing: content-box;
   border-radius: 5px;
-  transition: all .3s linear, background-color 0s, height .25s;
+  transition: all .3s linear, background-color 0s, padding .25s;
 }
 .main-content .task:hover {
-  height: 100px;
+  padding: 10px 0 20px 0;
   background-color: rgba(72, 126, 176, 0.2);
 }
 .main-content .task:hover .content {
   height: 40px;
   font-size: 1.35em;
-  top: 10px;
 }
 .main-content .task:hover .content::after {
   width: 98%;

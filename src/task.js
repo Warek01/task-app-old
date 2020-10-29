@@ -24,6 +24,7 @@ class Task {
         });
         // Task delete logic
         deleteBtn.click(function (event) {
+            showModalWindow();
             let index = 0;
             for (let em of main_content.children(".task")) {
                 if ($(em).text() === $(this).parent().text())
@@ -46,7 +47,6 @@ class Task {
                 }
                 else
                     $(this).parent().remove();
-                showModalWindow();
             });
         });
         // Task copy button

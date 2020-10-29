@@ -1,3 +1,10 @@
-{
-  "tasks": []
-}
+[
+  {
+    "content": "Hello World!",
+    "timestamp": 1603973897429
+  },
+  {
+    "content": "Test task",
+    "timestamp": 1603975757435
+  }
+]

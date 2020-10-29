@@ -3,21 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta name="description" content="To Do simple web application">
+    <meta name="keywords" content="To Do, Task">
     <link rel="shortcut icon" href="./src/img/icon.jpg" type="image/x-icon">
     <link rel="stylesheet" href="./src/style.css">
-    <script src="./src/jquery.js" defer></script>
-    <script src="./src/task.js"></script>
-    <script src="./src/script.js" defer></script>
     <title>Task app</title>
 </head>
 <body>
-    <% if (locals.tasks.tasks.length > 0) { %>
-     <style>
-        #banner-empty {
-           display: none;
-        }
-     </style>
-    <% } %>
 
     <div class="modal">
         <img src="./src/img/checkmark-black-32.png" alt="Done">
@@ -65,18 +58,7 @@
     </div>
 
     <div class="main-content text-col">
-       <% if(locals.tasks.tasks.length > 0) { %> 
-            <% tasks.tasks.forEach(element => { %>
-                <div class="task-from-server">
-                  <span class="content">
-                     <%= element.content %> 
-                  </span>
-                  <span class="timestamp">
-                     <%= element.timestamp %> 
-                  </span> 
-                </div>
-            <% }) %>
-         <% } %> 
+       
     </div>
 
     <div id="banner_help">
@@ -89,5 +71,20 @@
         <button id="close-btn">close</button>
     </div>
 
+    <script src="./src/jquery.js"></script>
+    <script src="./src/task.js"></script>
+    <script src="./src/script.js"></script>
+
+    <% if(locals.tasks.length > 0) { %> 
+        <% tasks.forEach(element => { %>
+            <script>
+                new Task("<%= element.content %>", Number("<%= element.timestamp %>"));
+            </script>
+        <% }) %>
+
+        <style>
+            #banner-empty { display: none; }
+         </style>
+     <% } %> 
 </body>
 </html>

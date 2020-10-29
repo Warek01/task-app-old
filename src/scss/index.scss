@@ -1,45 +1,45 @@
-    @import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;700&display=swap');
-    /* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap');
-    /* font-family: 'Open Sans', sans-serif; -Content- */
-
-    * {
-        margin: 0;
-        padding: 0;
-
-        &::selection {
-            background-color: rgba(#55E6C1, .75);
-        }
+* {
+    margin: 0;
+    padding: 0;
+    &::selection {
+        background-color: rgba(#55E6C1, .75);
     }
+}
 
-    body {
-        background-color: #bdc3c7;
-        font-family: 'Open Sans', sans-serif;
-        font-size: 16px;
-        transition: background-color .2s ease;
-    }
+body {
+    background-color: #bdc3c7;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    transition: background-color .2s ease;
+}
 
-    .text-col {
-        color: #fff;
-        transition: all .2s ease;
-    }
+.text-col {
+    color: #fff;
+    transition: all .2s ease;
+}
 
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Baloo Tamma 2', cursive;
-        user-select: none;
-    }
+h1, h2, h3, h4, h5, h6 {
+    // To Do logo
+    font-family: 'Baloo Tamma 2', cursive;
+    user-select: none;
+}
 
-    kbd {
-        display: inline-block;
-        text-indent: 0;
-        color: #fff;
-        background-color:   rgba(24, 17, 17, 0.863);
-        border-radius: 5px;
-    }
+kbd {
+    display: inline-block;
+    font-family: "Fira Code";
+    font-weight: 300;
+    text-indent: 0;
+    margin: 0 2px 0 2px;
+    padding: 2px 5px 2px 5px;
+    color: #fff;
+    background-color: rgba(24, 17, 17, 0.863);
+    border-radius: 5px;
+}
 
-    @import "modal";
-    @import "header";
-    @import "main_input";
-    @import "main_content";
-    @import "banner_empty";
-    @import "banner_help";
+@import "fonts";
+@import "modal";
+@import "header";
+@import "main_input";
+@import "main_content";
+@import "banner_empty";
+@import "banner_help";
