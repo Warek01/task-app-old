@@ -35,16 +35,6 @@ let colorSetting = {
    }
 };
 
-// If there are any tasks from the server
-// Make them tasks with Task Class and remove them
-if ($(".task-from-server").length > 0) {
-   let tasks: JQuery = $(".task-from-server");
-   for (let em of tasks) {
-      postTask($(em).find(".content").text().trim(), Number($(em).find(".timestamp").text().trim()));
-      $(em).remove();
-   }
-}
-
 // Help banner toggler
 options.find(".help").click(function(event): void {
    if (banner_help.css("display") === "none")

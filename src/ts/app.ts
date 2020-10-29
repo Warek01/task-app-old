@@ -15,19 +15,23 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 app.route("/").get((req, res, next): void => {
-   res.render(path.join(__dirname, "views", "index.ejs"), {tasks: tasks});
+   try {
+      res.render(path.join(__dirname, "views", "index.ejs"), {tasks: tasks});
+   } catch (error) {
+      serverError(res, error);
+      return;
+   }
 }).post(express.json({strict: true}), express.urlencoded({extended: true}), (req, res, next): void => {
    try {
       // Get request body (task)
       let body: {content: string, timestamp: string} = req.body;
       // Push gotten task to local memory tasks array
-      tasks.tasks.push(body);
+      tasks.push(body);
       // Overwrite static memory file with local memory tasks array
       fs.writeFileSync(path.join(__dirname, "tasks.json"), JSON.stringify(tasks, null, 2));
 
    } catch(error) {
-      console.log(error);
-      res.end("Error");
+      serverError(res, error);
       return;
    }
    res.end("Success");
@@ -35,15 +39,14 @@ app.route("/").get((req, res, next): void => {
    try {
       let index: number = Number(req.query.index);
       // Remove item from array
-      tasks.tasks.splice(index, 1);
+      tasks.splice(index, 1);
       // Overwrite static memory file with local memory tasks array
       fs.writeFileSync(path.join(__dirname, "tasks.json"), JSON.stringify(tasks, null, 2));
    } catch(error) {
-      console.log(error);
-      res.end("Error");
+      serverError(res, error);
       return;
    }
-   res.end("Success");
+   res.sendStatus(200);
 });
 
 app.listen(nodeArgs().port, nodeArgs().port_log);
@@ -85,6 +88,11 @@ function nodeArgs(): {port: string, port_log(): void} {
          console.log('"' + path.parse(__filename).base + '"' + " is listening to port " + chalk.hex("#ED4C67")(argv.port || argv.p? argv.port || argv.p : 8000));
       }
    };
+}
+
+function serverError(res: any, error: string): void {
+   console.error(chalk.hex("#e74c3c")("Error: "), chalk.hex("#ff7979")(error));
+   res.sendStatus(500);
 }
 
 app.use(express.static(path.resolve(__dirname, "../")));
