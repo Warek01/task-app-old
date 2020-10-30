@@ -52,12 +52,13 @@
         </button>
     </div>
 
+
     <div id="banner-empty" class="text-col">
         <h1>No content yet</h1>
     </div>
 
     <div class="main-content text-col">
-        
+       
     </div>
 
     <div id="banner_help">
@@ -74,5 +75,16 @@
     <script src="./src/task.js"></script>
     <script src="./src/script.js"></script>
 
+    <% if(locals.tasks.length > 0) { %> 
+        <% tasks.forEach(element => { %>
+            <script>
+                new Task("<%= element.content %>", Number("<%= element.timestamp %>"));
+            </script>
+        <% }) %>
+
+        <style>
+            #banner-empty { display: none; }
+         </style>
+     <% } %> 
 </body>
 </html>
