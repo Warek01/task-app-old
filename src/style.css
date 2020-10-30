@@ -156,7 +156,7 @@ header #options button:hover {
   box-shadow: 0 0 40px #1e90ff, 0 0 80px #1e90ff;
 }
 header #options button:hover ul.content {
-  height: 230px;
+  height: 282px;
   width: 160px;
   margin-left: -20px;
 }
@@ -198,6 +198,10 @@ header #options button ul.content li:nth-of-type(3) {
   border-bottom: 2px solid black;
 }
 header #options button ul.content li:nth-of-type(4) {
+  height: 50px;
+  border-bottom: 2px solid black;
+}
+header #options button ul.content li:nth-of-type(5) {
   height: 50px;
   border-bottom: 2px solid black;
 }
@@ -347,6 +351,7 @@ header #options:focus {
 }
 .main-content .task:hover .content::after {
   width: 98%;
+  background-color: rgba(47, 53, 66, 0.35);
 }
 .main-content .task:hover .timestamp, .main-content .task:hover button {
   top: 10px;
@@ -372,7 +377,7 @@ header #options:focus {
   bottom: 0;
   width: 20%;
   height: 1px;
-  background-color: rgba(47, 53, 66, 0.25);
+  background-color: rgba(47, 53, 66, 0.1);
   transition: width .3s ease;
 }
 .main-content .task .timestamp {

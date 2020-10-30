@@ -17,7 +17,6 @@
         transition: all .3s linear, background-color 0s, padding .25s;
 
         &:hover {
-            // height: 100px;
             padding: 10px 0 20px 0;
             background-color: rgba(#487eb0, .2);
 
@@ -27,6 +26,7 @@
 
                 &::after {
                     width: 98%;
+                    background-color: rgba(#2f3542, .35);
                 }
             }
 
@@ -35,13 +35,8 @@
             }
         }
 
-        &:first-child {
-            margin-top: 0;
-        }
-
-        &:nth-of-type(2n - 1) {
-            background-color: rgba(#333, .10);
-        }
+        &:first-child { margin-top: 0; }
+        &:nth-of-type(2n - 1) { background-color: rgba(#333, .10); }
 
         .content {
             position: relative;
@@ -58,7 +53,7 @@
                 bottom: 0;
                 width: 20%;
                 height: 1px;
-                background-color: rgba(#2f3542, .25);
+                background-color: rgba(#2f3542, .1);
 
                 transition: width .3s ease;
             }
