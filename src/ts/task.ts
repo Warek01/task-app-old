@@ -1,4 +1,9 @@
 // V 1.0
+interface HTMLElement {
+   // Old text content for task editing
+   oldContent?: string
+}
+
 interface Task {
    content: string;
    element: JQuery;
@@ -10,7 +15,7 @@ class Task implements Task {
    constructor(content: string, public timestamp: number = Date.now()) {
 
       let task: JQuery = $("<div>", {
-            "class": "task text-col"
+            "class": "task"
          }),
          taskTimestamp: JQuery = $("<div>", {
             html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
@@ -37,18 +42,21 @@ class Task implements Task {
 
       // Task delete logic
       deleteBtn.click(function(event): void {
-         showModalWindow();
-
+         /** Index of given task in main-content */
          let index = 0;
             for (let em of main_content.children(".task")) {
                if ($(em).text() === $(this).parent().text())
                   break;
                index++;
             }
-            console.log(index)
             fetch(`/?index=${index}`, {
                method: "DELETE"
-            }).then(res => res.text()).then(res => console.log(res));
+            }).then(res => {
+               if (res.ok)
+                  showModalWindow(modalTypes.OK);
+               else
+                  showModalWindow(modalTypes.ERROR);
+            });
 
          $(this).parent().hide("slow", () => {
             if (main_content.find(".task").length <= 1) {
@@ -76,7 +84,62 @@ class Task implements Task {
          document.execCommand("copy");
          window.getSelection().removeAllRanges();
 
-         showModalWindow();
+         showModalWindow(modalTypes.OK);
+      });
+
+      // Task edit button
+      editBtn.click(function(event): void {
+         let content: JQuery = $(this).parent().find("p.content");
+         content.attr("contenteditable", "true").trigger("focus").css("color", "#f7d794");
+         this.oldContent = content.text();
+      });
+
+      // Set "contenteditable" attribute to false if it was true
+      // when losing focus, and sending an text update request to 
+      // given task on server
+      taskContent.on({
+         focusout: function(event): void {
+            console.log($(this).text() !== this.oldContent)
+            if (Boolean($(this).attr("contenteditable"))) {
+               $(this).removeAttr("contenteditable").css("color", colorSetting.currentTextCol);
+
+               // If the task content hasn't changed
+               if ($(this).text() !== this.oldContent)
+                  return;
+
+               try {
+                  /** Index of given task in main-content */
+                  let index = 0;
+                  for (let em of main_content.children(".task")) {
+                     if ($(em).text() === $(this).parent().text())
+                        break;
+                     index++;
+                  }
+
+                  fetch("/", {
+                     method: "POST",
+                     headers: {
+                        "Content-Type": "application/json"
+                     },
+                     body: JSON.stringify({
+                        index: index,
+                        content: $(this).parent().find("p.content").text().trim()
+                     })
+                  }).then(res => {
+                     if (res.ok)
+                        showModalWindow(modalTypes.OK);
+                     else
+                        showModalWindow(modalTypes.ERROR);
+                  });
+
+               } catch(error) {
+                  console.warn(error);
+               }
+            }
+         }, keydown: function(event): void {
+            if (event.key === "Enter")
+               $(this).trigger("focusout");
+         }
       });
          
       taskContent.css("color", colorSetting.currentTextCol);

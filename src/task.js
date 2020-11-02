@@ -3,7 +3,7 @@ class Task {
     constructor(content, timestamp = Date.now()) {
         this.timestamp = timestamp;
         let task = $("<div>", {
-            "class": "task text-col"
+            "class": "task"
         }), taskTimestamp = $("<div>", {
             html: `${Task.getDay(new Date(this.timestamp).getDay())} ${new Date(this.timestamp).getDate()} 
                ${Task.getMonth(new Date(this.timestamp).getMonth())} ${new Date(this.timestamp).getFullYear()}
@@ -24,17 +24,21 @@ class Task {
         });
         // Task delete logic
         deleteBtn.click(function (event) {
-            showModalWindow();
+            /** Index of given task in main-content */
             let index = 0;
             for (let em of main_content.children(".task")) {
                 if ($(em).text() === $(this).parent().text())
                     break;
                 index++;
             }
-            console.log(index);
             fetch(`/?index=${index}`, {
                 method: "DELETE"
-            }).then(res => res.text()).then(res => console.log(res));
+            }).then(res => {
+                if (res.ok)
+                    showModalWindow(modalTypes.OK);
+                else
+                    showModalWindow(modalTypes.ERROR);
+            });
             $(this).parent().hide("slow", () => {
                 if (main_content.find(".task").length <= 1) {
                     if (banner_empty.css("display") === "none")
@@ -57,7 +61,57 @@ class Task {
             window.getSelection().addRange(range);
             document.execCommand("copy");
             window.getSelection().removeAllRanges();
-            showModalWindow();
+            showModalWindow(modalTypes.OK);
+        });
+        // Task edit button
+        editBtn.click(function (event) {
+            let content = $(this).parent().find("p.content");
+            content.attr("contenteditable", "true").trigger("focus").css("color", "#f7d794");
+            this.oldContent = content.text();
+        });
+        // Set "contenteditable" attribute to false if it was true
+        // when losing focus, and sending an text update request to 
+        // given task on server
+        taskContent.on({
+            focusout: function (event) {
+                console.log($(this).text() !== this.oldContent);
+                if (Boolean($(this).attr("contenteditable"))) {
+                    $(this).removeAttr("contenteditable").css("color", colorSetting.currentTextCol);
+                    // If the task content hasn't changed
+                    if ($(this).text() !== this.oldContent)
+                        return;
+                    try {
+                        /** Index of given task in main-content */
+                        let index = 0;
+                        for (let em of main_content.children(".task")) {
+                            if ($(em).text() === $(this).parent().text())
+                                break;
+                            index++;
+                        }
+                        fetch("/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                index: index,
+                                content: $(this).parent().find("p.content").text().trim()
+                            })
+                        }).then(res => {
+                            if (res.ok)
+                                showModalWindow(modalTypes.OK);
+                            else
+                                showModalWindow(modalTypes.ERROR);
+                        });
+                    }
+                    catch (error) {
+                        console.warn(error);
+                    }
+                }
+            }, keydown: function (event) {
+                if (event.key === "Enter")
+                    $(this).trigger("focusout");
+            }
         });
         taskContent.css("color", colorSetting.currentTextCol);
         task.append(taskContent, taskTimestamp, deleteBtn, editBtn, copyBtn);

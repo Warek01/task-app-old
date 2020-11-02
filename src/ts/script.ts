@@ -13,27 +13,31 @@ const bg_colors: string[] = [ "#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
 "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d" ],
 text_colors: string[] = [ "#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794" ];
 
-let tempTextElements: JQuery = $(".text-col");
-let colorSetting = {
-   originalBg: body.css("background-color"),
-   currentBg: body.css("background-color"),
-   bgIndex: 0,
-   originalTextCol: tempTextElements.eq(0).css("color"),
-   currentTextCol:  tempTextElements.eq(0).css("color"),
-   textIndex: 0,
-   
-   reset(): void {
-      body.css("background-color", this.originalBg);
-      tempTextElements.css("color", this.originalTextCol);
-      $("#textcol").css("background-color", this.originalTextCol);
-      $("#bgcol").css("background-color", this.originalBg);
-      $(".circle-bgc").css("background-color", this.originalBg);
-      this.currentBg = this.originalBg;
-      this.currentTextCol = this.originalTextCol;
-      this.bgIndex = 0;
-      this.textIndex = 0;
-   }
-};
+let tempTextElements: JQuery = $(".text-col"),
+   colorSetting = {
+      originalBg: body.css("background-color"),
+      currentBg: body.css("background-color"),
+      bgIndex: 0,
+      originalTextCol: tempTextElements.eq(0).css("color"),
+      currentTextCol:  tempTextElements.eq(0).css("color"),
+      textIndex: 0,
+      
+      reset(): void {
+         body.css("background-color", this.originalBg);
+         tempTextElements.css("color", this.originalTextCol);
+         $("#textcol").css("background-color", this.originalTextCol);
+         $("#bgcol").css("background-color", this.originalBg);
+         $(".circle-bgc").css("background-color", this.originalBg);
+         this.currentBg = this.originalBg;
+         this.currentTextCol = this.originalTextCol;
+         this.bgIndex = 0;
+         this.textIndex = 0;
+      }
+   };
+
+enum modalTypes {
+   OK, ERROR, INFO
+}
 
 // Help banner toggler
 options.find(".help").click(function(event): void {
@@ -133,7 +137,7 @@ $(window).keydown(function(event?): void {
          break;
       case "Enter":
          // Post the task from input
-         postTask();
+            postTask();
          break;
       case "Escape":
          // Close help banner
@@ -176,7 +180,6 @@ function postTask(content: string | null = null, timestamp: number | null = null
          task = new Task(String(textInput.val()).trim());
          textInput.val("");
       }
-      tempTextElements = $(".text-col");
 
       // Send the new task to server
       fetch("/", {
@@ -193,9 +196,29 @@ function postTask(content: string | null = null, timestamp: number | null = null
       // Only make it, no post and send
       new Task(content, timestamp);
    }
+
+   tempTextElements = $(".text-col");
 }
 
-function showModalWindow(): void {
+/* Trebuie de facut Error modal window */
+function showModalWindow(type: modalTypes = modalTypes.OK, text: string = null): void {
+   let textContent: JQuery = $(".modal .content");
+
+   switch(type) {
+      case modalTypes.OK: 
+         modal.css("background-color", "#4cd137bf");
+         textContent.text("done!");
+         break;
+      case modalTypes.ERROR: 
+         modal.css("background-color", "#e84118bf");
+         textContent.text("error!");
+         break;
+      case modalTypes.INFO: 
+         modal.css("background-color", "#f5f6fabf");
+         textContent.text(text);
+         break;
+   }
+
    modal.css("transition", "filter 75ms linear");
    modal.css("filter", "opacity(1)");
    setTimeout(() => {

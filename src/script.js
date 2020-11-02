@@ -2,8 +2,7 @@
 const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), modal = $(".modal"), inputDiv = $("#input"), inputElement = inputDiv.find("input"), inputCopy = $("#input-copy");
 const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
     "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
-let tempTextElements = $(".text-col");
-let colorSetting = {
+let tempTextElements = $(".text-col"), colorSetting = {
     originalBg: body.css("background-color"),
     currentBg: body.css("background-color"),
     bgIndex: 0,
@@ -22,6 +21,12 @@ let colorSetting = {
         this.textIndex = 0;
     }
 };
+var modalTypes;
+(function (modalTypes) {
+    modalTypes[modalTypes["OK"] = 0] = "OK";
+    modalTypes[modalTypes["ERROR"] = 1] = "ERROR";
+    modalTypes[modalTypes["INFO"] = 2] = "INFO";
+})(modalTypes || (modalTypes = {}));
 // Help banner toggler
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
@@ -143,7 +148,6 @@ function postTask(content = null, timestamp = null) {
             task = new Task(String(textInput.val()).trim());
             textInput.val("");
         }
-        tempTextElements = $(".text-col");
         // Send the new task to server
         fetch("/", {
             method: "POST",
@@ -160,8 +164,25 @@ function postTask(content = null, timestamp = null) {
         // Only make it, no post and send
         new Task(content, timestamp);
     }
+    tempTextElements = $(".text-col");
 }
-function showModalWindow() {
+/* Trebuie de facut Error modal window */
+function showModalWindow(type = modalTypes.OK, text = null) {
+    let textContent = $(".modal .content");
+    switch (type) {
+        case modalTypes.OK:
+            modal.css("background-color", "#4cd137bf");
+            textContent.text("done!");
+            break;
+        case modalTypes.ERROR:
+            modal.css("background-color", "#e84118bf");
+            textContent.text("error!");
+            break;
+        case modalTypes.INFO:
+            modal.css("background-color", "#f5f6fabf");
+            textContent.text(text);
+            break;
+    }
     modal.css("transition", "filter 75ms linear");
     modal.css("filter", "opacity(1)");
     setTimeout(() => {

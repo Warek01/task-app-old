@@ -79,7 +79,7 @@
     <% if(locals.tasks.length > 0) { %> 
         <% tasks.forEach(element => { %>
             <script>
-                new Task("<%= element.content %>", Number("<%= element.timestamp %>"));
+                postTask("<%= element.content %>", Number("<%= element.timestamp %>"));
             </script>
         <% }) %>
 

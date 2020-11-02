@@ -10,7 +10,7 @@ const app = express(),
    task_history_path: string = path.join(__dirname, "tasks_history.json");
 
 /** Tasks database object */
-let tasks: any = JSON.parse(fs.readFileSync(task_path).toString());
+let taskDB: {content: string, timestamp: number|string}[] = JSON.parse(fs.readFileSync(task_path).toString());
 
 nodeArgs();
 app.use(cors());
@@ -20,45 +20,56 @@ app.set("views", path.join(__dirname, "views"));
 //       /* / */ ---------------
 app.route("/").get((req, res, next): void => {
    try {
-      res.render("index", {tasks: tasks});
+      res.render("index", {tasks: taskDB});
    } catch (error) {
       serverError(res, error);
       return;
    }
 }).post(express.json({strict: true}), express.urlencoded({extended: true}), (req, res, next): void => {
    try {
-      // Get request body (task)
-      let body: {content: string, timestamp: string} = req.body,
-         tasksHistory: any = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+      if (!req.body.index) {
+         // Get request body (task)
+         let body: {content: string, timestamp: string} = req.body,
+            tasksHistory: any = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
 
-      // Push gotten task to local memory tasks array
-      tasksHistory.push(body);
-      tasks.push(body);
+         // Push gotten task to local memory tasks array
+         tasksHistory.push(body);
+         taskDB.push(body);
 
-      // Overwrite static memory file with local memory tasks array
-      fs.writeFileSync(task_path, JSON.stringify(tasks, null, 2));
-      fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {});
+         // Overwrite static memory file with local memory tasks array
+         fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+         fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {});
+      } 
+      // Task content update logic
+      else {
+         let body: {index: number, content: string} = req.body;
 
+         // Update required task content to gotten one
+         taskDB[body.index].content = body.content;
+         // Overwrite static memory file with local memory tasks array
+         fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+      }
    } catch(error) {
       serverError(res, error);
       return;
    }
-   res.end("Success");
-}).delete((req, res, next) => {
-   // Task deleting logic
+   res.sendStatus(200);
+})
+// Task deleting logic
+.delete((req, res, next):void => {
    try {
       let index: number = Number(req.query.index);
       // Remove item from array
-      tasks.splice(index, 1);
+      taskDB.splice(index, 1);
       // Overwrite static memory file with local memory tasks array
-      fs.writeFileSync(task_path, JSON.stringify(tasks, null, 2));
+      fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
    } catch(error) {
       serverError(res, error);
       return;
    }
    res.sendStatus(200);
 });
-// --------------------------
+// -------------------------- /* / */
 
 //       /* /HISTORY */ ---------------
 app.route("/history").get((req, res, next) => {
@@ -80,7 +91,7 @@ app.route("/history").get((req, res, next) => {
    res.sendStatus(200);
 });
 
-// --------------------------
+// -------------------------- /* /HISTORY */
 
 app.listen(nodeArgs().port, nodeArgs().port_log);
 app.use(express.static(path.resolve(__dirname, "../")));

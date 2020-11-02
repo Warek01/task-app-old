@@ -66,7 +66,7 @@ kbd {
   grid-template-columns: 1fr 2fr;
   align-content: center;
   justify-content: center;
-  background-color: rgba(76, 209, 55, 0.9);
+  text-transform: uppercase;
   border-radius: 5px;
   pointer-events: none;
   filter: opacity(0);
@@ -353,6 +353,9 @@ header #options:focus {
   width: 98%;
   background-color: rgba(47, 53, 66, 0.35);
 }
+.main-content .task:hover button {
+  background-color: #1e90ff;
+}
 .main-content .task:hover .timestamp, .main-content .task:hover button {
   top: 10px;
 }
@@ -370,6 +373,9 @@ header #options:focus {
   margin-left: 1.25%;
   top: 0;
 }
+.main-content .task .content:focus {
+  outline: none;
+}
 .main-content .task .content::after {
   content: "";
   position: absolute;
@@ -384,7 +390,7 @@ header #options:focus {
   position: relative;
   display: inline-block;
   height: 30px;
-  width: 250px;
+  width: 230px;
   top: 0;
   margin-top: 7px;
   margin-left: 1%;
@@ -392,40 +398,6 @@ header #options:focus {
   letter-spacing: 1px;
   color: #eee;
   transition: all .3s ease;
-}
-.main-content .task input[type=checkbox].task-check {
-  position: relative;
-  float: left;
-  top: 2px;
-  width: 18px;
-  height: 18px;
-  z-index: 3;
-  opacity: 0;
-}
-.main-content .task input[type=checkbox].task-check:hover {
-  cursor: pointer;
-}
-.main-content .task input[type=checkbox].task-check:checked {
-  opacity: 0;
-}
-.main-content .task input[type=checkbox].task-check:checked ~ span.checkbox img {
-  display: block;
-}
-.main-content .task span.checkbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 2px;
-  width: 18px;
-  height: 18px;
-  z-index: 2;
-  background-color: #485460;
-}
-.main-content .task span.checkbox img {
-  width: 14px;
-  height: 14px;
-  display: none;
 }
 .main-content .task p {
   display: inline-block;
@@ -446,7 +418,16 @@ header #options:focus {
 .main-content .task button {
   position: relative;
   top: 0;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background-color: gray;
   transition: all .3s ease;
+}
+.main-content .task button:not(:first-of-type) {
+  margin-left: 10px;
 }
 
 #banner-empty {
