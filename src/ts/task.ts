@@ -1,9 +1,9 @@
+// V 1.0
 interface Task {
    content: string;
    element: JQuery;
    timestamp: number;
 }
-
 class Task implements Task {
    public content: string;
    
