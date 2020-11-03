@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
+/* font-family: "Open Sans" */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  background-color: #bdc3c7;
+  font-size: 16px;
+  animation: bg 10s infinite;
+  transition: background-color .2s ease;
+}
+
+*::selection {
+  background-color: rgba(85, 230, 193, 0.75);
+}
+
+@keyframes bg {
+  0% {
+    background-color: #bdc3c7;
+  }
+  50% {
+    background-color: #6c777f;
+  }
+  100% {
+    background-color: #bdc3c7;
+  }
+}
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper .login {
+  position: relative;
+  width: 350px;
+  height: 500px;
+  border: 1px solid #999;
+  border-radius: 20px;
+}
+.wrapper .login p {
+  text-align: center;
+}
+.wrapper .login button {
+  position: relative;
+  display: block;
+  width: 85%;
+  background-color: rgba(30, 144, 255, 0.5);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 10px 0;
+  margin: 0 auto;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin-top: 30px;
+  transition: all 200ms ease;
+}
+.wrapper .login button:hover {
+  background-color: dodgerblue;
+}
+.wrapper .login button:focus {
+  outline: none;
+}
+.wrapper .login input {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  width: 275px;
+  height: 20px;
+}
+.wrapper .login input:focus {
+  outline: none;
+}
+.wrapper .login .img-wrap {
+  position: relative;
+  display: flex;
+  width: 75px;
+  height: 75px;
+  padding: 10px;
+  margin: 30px auto;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.wrapper .login .img-wrap img {
+  position: relative;
+  bottom: 5px;
+}

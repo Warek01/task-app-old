@@ -32,6 +32,8 @@
 
             button {
                 background-color: #1e90ff;
+
+                &:focus { outline: none; }
             }
 
             .timestamp, button {

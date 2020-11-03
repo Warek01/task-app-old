@@ -38,6 +38,10 @@ class Task implements Task {
          copyBtn: JQuery = $("<button>", {
             html: "Copy text",
             "class": "copy"
+         }),
+         markBtn: JQuery = $("<button>", {
+            html: "Mark as important",
+            "class": "mark"
          });
 
       // Task delete logic
@@ -49,13 +53,13 @@ class Task implements Task {
                   break;
                index++;
             }
-            fetch(`/?index=${index}`, {
+            fetch(`/users/${userID}?index=${index}`, {
                method: "DELETE"
             }).then(res => {
                if (res.ok)
-                  showModalWindow(modalTypes.OK);
+                  showModalWindow("ok");
                else
-                  showModalWindow(modalTypes.ERROR);
+                  showModalWindow("error");
             });
 
          $(this).parent().hide("slow", () => {
@@ -84,7 +88,7 @@ class Task implements Task {
          document.execCommand("copy");
          window.getSelection().removeAllRanges();
 
-         showModalWindow(modalTypes.OK);
+         showModalWindow("ok");
       });
 
       // Task edit button
@@ -127,9 +131,9 @@ class Task implements Task {
                      })
                   }).then(res => {
                      if (res.ok)
-                        showModalWindow(modalTypes.OK);
+                        showModalWindow("ok");
                      else
-                        showModalWindow(modalTypes.ERROR);
+                        showModalWindow("error");
                   });
 
                } catch(error) {
@@ -143,7 +147,7 @@ class Task implements Task {
       });
          
       taskContent.css("color", colorSetting.currentTextCol);
-      task.append(taskContent, taskTimestamp, deleteBtn, editBtn, copyBtn);
+      task.append(taskContent, taskTimestamp, markBtn, editBtn, copyBtn, deleteBtn);
       main_content.append(task);
 
       this.content = content;

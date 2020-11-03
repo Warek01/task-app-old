@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
 
+*::selection {
+   background-color: rgba(#55E6C1, .75);
+}
+
 body {
    font-family: "Open Sans";
    margin: 0;

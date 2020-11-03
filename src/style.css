@@ -83,7 +83,7 @@ kbd {
 }
 .modal img {
   position: relative;
-  left: 110px;
+  left: 80px;
   bottom: 5px;
   width: 36px;
   height: 36px;
@@ -355,6 +355,9 @@ header #options:focus {
 }
 .main-content .task:hover button {
   background-color: #1e90ff;
+}
+.main-content .task:hover button:focus {
+  outline: none;
 }
 .main-content .task:hover .timestamp, .main-content .task:hover button {
   top: 10px;

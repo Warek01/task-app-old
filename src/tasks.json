@@ -1,1 +1,12 @@
-[]
+{
+  "alex": [
+    {
+      "content": "Hello there!",
+      "timestamp": 1604412054865
+    },
+    {
+      "content": "123",
+      "timestamp": 1604415067685
+    }
+  ]
+}

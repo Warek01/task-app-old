@@ -10,23 +10,52 @@ const app = express(),
    task_history_path: string = path.join(__dirname, "tasks_history.json");
 
 /** Tasks database object */
-let taskDB: {content: string, timestamp: number|string}[] = JSON.parse(fs.readFileSync(task_path).toString());
+let taskDB = JSON.parse(fs.readFileSync(task_path).toString()) || {};
 
 nodeArgs();
 app.use(cors());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-//       /* / */ ---------------
-app.route("/").get((req, res, next): void => {
+// New main route
+app.get("/", (req, res, next): void => {
+   res.redirect("/login");
+});
+app.get("/users", (req, res, next): void => {
+   res.redirect("/login");
+}).get("/user", (req, res, next): void => {
+   res.redirect("/login");
+});
+
+
+//       /* /USERS/USERID */ ---------------
+app.route("/users/:userID").get((req, res, next): void => {
    try {
-      res.render("index", {tasks: taskDB});
+      let userID: string = req.params.userID.toLowerCase();
+      if (userID in taskDB) {
+
+         res.render("index", {
+            tasks: taskDB[userID],
+            userID: userID,
+            newUser: false
+         });
+
+      } else {
+         taskDB[userID] = [];
+         res.render("index", {
+            userID: userID,
+            newUser: true
+         });
+      }
+      
    } catch (error) {
       serverError(res, error);
       return;
    }
-}).post(express.json({strict: true}), express.urlencoded({extended: true}), (req, res, next): void => {
+}).post(express.json({strict: true}), (req, res, next): void => {
    try {
+
+      let userID: string = req.params.userID.toLowerCase();
       if (!req.body.index) {
          // Get request body (task)
          let body: {content: string, timestamp: string} = req.body,
@@ -34,7 +63,7 @@ app.route("/").get((req, res, next): void => {
 
          // Push gotten task to local memory tasks array
          tasksHistory.push(body);
-         taskDB.push(body);
+         taskDB[userID].push(body);
 
          // Overwrite static memory file with local memory tasks array
          fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
@@ -45,7 +74,7 @@ app.route("/").get((req, res, next): void => {
          let body: {index: number, content: string} = req.body;
 
          // Update required task content to gotten one
-         taskDB[body.index].content = body.content;
+         taskDB[userID][body.index].content = body.content;
          // Overwrite static memory file with local memory tasks array
          fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
       }
@@ -58,9 +87,11 @@ app.route("/").get((req, res, next): void => {
 // Task deleting logic
 .delete((req, res, next):void => {
    try {
-      let index: number = Number(req.query.index);
+      let userID: string = req.params.userID.toLowerCase(),
+         index: number = Number(req.query.index);
+
       // Remove item from array
-      taskDB.splice(index, 1);
+      taskDB[userID].splice(index, 1);
       // Overwrite static memory file with local memory tasks array
       fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
    } catch(error) {
@@ -69,7 +100,7 @@ app.route("/").get((req, res, next): void => {
    }
    res.sendStatus(200);
 });
-// -------------------------- /* / */
+// -------------------------- /* /USERS/USERID */
 
 //       /* /HISTORY */ ---------------
 app.route("/history").get((req, res, next) => {
@@ -93,8 +124,22 @@ app.route("/history").get((req, res, next) => {
 
 // -------------------------- /* /HISTORY */
 
+//       /* /LOGIN */ ---------------
+app.route("/login").get((req, res, next): void => {
+   res.render("login", {});
+});
+// -------------------------- /* /LOGIN */
+
+//       /* /NOUSER */ ---------------
+app.route("/nouser").get((req, res, next): void => {
+   res.sendFile(path.resolve(__dirname, "../index.html"));
+});
+// -------------------------- /* /NOUSER */
+
+
 app.listen(nodeArgs().port, nodeArgs().port_log);
-app.use(express.static(path.resolve(__dirname, "../")));
+// app.use(express.static(path.resolve(__dirname, "../")));
+app.use(express.static(__dirname));
 
 // --------------------------
 /* Functions */

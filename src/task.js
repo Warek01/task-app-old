@@ -21,6 +21,9 @@ class Task {
         }), copyBtn = $("<button>", {
             html: "Copy text",
             "class": "copy"
+        }), markBtn = $("<button>", {
+            html: "Mark as important",
+            "class": "mark"
         });
         // Task delete logic
         deleteBtn.click(function (event) {
@@ -31,13 +34,13 @@ class Task {
                     break;
                 index++;
             }
-            fetch(`/?index=${index}`, {
+            fetch(`/users/${userID}?index=${index}`, {
                 method: "DELETE"
             }).then(res => {
                 if (res.ok)
-                    showModalWindow(modalTypes.OK);
+                    showModalWindow("ok");
                 else
-                    showModalWindow(modalTypes.ERROR);
+                    showModalWindow("error");
             });
             $(this).parent().hide("slow", () => {
                 if (main_content.find(".task").length <= 1) {
@@ -61,7 +64,7 @@ class Task {
             window.getSelection().addRange(range);
             document.execCommand("copy");
             window.getSelection().removeAllRanges();
-            showModalWindow(modalTypes.OK);
+            showModalWindow("ok");
         });
         // Task edit button
         editBtn.click(function (event) {
@@ -99,9 +102,9 @@ class Task {
                             })
                         }).then(res => {
                             if (res.ok)
-                                showModalWindow(modalTypes.OK);
+                                showModalWindow("ok");
                             else
-                                showModalWindow(modalTypes.ERROR);
+                                showModalWindow("error");
                         });
                     }
                     catch (error) {
@@ -114,7 +117,7 @@ class Task {
             }
         });
         taskContent.css("color", colorSetting.currentTextCol);
-        task.append(taskContent, taskTimestamp, deleteBtn, editBtn, copyBtn);
+        task.append(taskContent, taskTimestamp, markBtn, editBtn, copyBtn, deleteBtn);
         main_content.append(task);
         this.content = content;
         this.element = task;

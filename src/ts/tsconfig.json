@@ -7,7 +7,7 @@
       "watch": true,
       "strictNullChecks": false,
       "alwaysStrict": true,
-      "strict": true,
+      "strict": false,
       "outDir": "../"
    },
    "exclude": ["node_modules", "*/node_modules"]

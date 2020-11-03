@@ -35,9 +35,15 @@ let tempTextElements: JQuery = $(".text-col"),
       }
    };
 
-enum modalTypes {
-   OK, ERROR, INFO
-}
+
+// Global variables
+declare const userID: string;
+/** Whether user is newly created or not */
+declare const newUser: boolean;
+
+
+if (newUser)
+   showModalWindow("info", "Welcome!");
 
 // Help banner toggler
 options.find(".help").click(function(event): void {
@@ -162,7 +168,7 @@ Array.prototype.has = function(element: any): boolean {
    return false;
 }
 
-function postTask(content: string | null = null, timestamp: number | null = null) {
+function postTask(content: string | null = null, timestamp: number | string | null = null) {
    // Text field
    let textInput: JQuery = inputDiv.find("input"),
       task: Task;
@@ -182,7 +188,7 @@ function postTask(content: string | null = null, timestamp: number | null = null
       }
 
       // Send the new task to server
-      fetch("/", {
+      fetch(`/users/${userID}`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json"
@@ -194,29 +200,38 @@ function postTask(content: string | null = null, timestamp: number | null = null
    } else {
       // If task is present (received from the server)
       // Only make it, no post and send
-      new Task(content, timestamp);
+      new Task(content, Number(timestamp));
    }
 
    tempTextElements = $(".text-col");
 }
 
+type modalType = "ok" | "error" | "info";
+
 /* Trebuie de facut Error modal window */
-function showModalWindow(type: modalTypes = modalTypes.OK, text: string = null): void {
+function showModalWindow(type: modalType = "ok", text: string = ""): void {
    let textContent: JQuery = $(".modal .content");
 
    switch(type) {
-      case modalTypes.OK: 
-         modal.css("background-color", "#4cd137bf");
+      case "ok": 
+         modal.css("background-color", "#4cd137cf");
          textContent.text("done!");
          break;
-      case modalTypes.ERROR: 
-         modal.css("background-color", "#e84118bf");
+      case "error": 
+         modal.css("background-color", "#e84118cf");
          textContent.text("error!");
          break;
-      case modalTypes.INFO: 
-         modal.css("background-color", "#f5f6fabf");
+      case "info": 
+         modal.css("background-color", "#535c68ff");
          textContent.text(text);
-         break;
+
+         modal.css("transition", "filter 75ms linear");
+         modal.css("filter", "opacity(1)");
+         setTimeout(() => {
+            modal.css("filter", "opacity(0)");
+            modal.css("transition", "filter .3s ease");
+         }, 2250);
+         return;
    }
 
    modal.css("transition", "filter 75ms linear");
@@ -224,5 +239,5 @@ function showModalWindow(type: modalTypes = modalTypes.OK, text: string = null):
    setTimeout(() => {
       modal.css("filter", "opacity(0)");
       modal.css("transition", "filter .3s ease");
-   }, 750);
+   }, 1250);
 }
