@@ -44,27 +44,47 @@ app.route("/users/:userID").get((req, res, next) => {
         serverError(res, error);
         return;
     }
-}).post(express.json({ strict: true }), (req, res, next) => {
+})
+    // All post/update request
+    .post(express.json({ strict: true }), (req, res, next) => {
     try {
-        let userID = req.params.userID.toLowerCase();
-        if (!req.body.index) {
+        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta");
+        if (reqType === "post") {
             // Get request body (task)
             let body = req.body, tasksHistory = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+            body.important = false;
             // Push gotten task to local memory tasks array
             tasksHistory.push(body);
             taskDB[userID].push(body);
             // Overwrite static memory file with local memory tasks array
-            fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
             fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => { });
         }
         // Task content update logic
-        else {
-            let body = req.body;
+        else if (reqType === "update") {
+            let body = {
+                index: req.body.index,
+                content: req.body.content
+            };
             // Update required task content to gotten one
             taskDB[userID][body.index].content = body.content;
-            // Overwrite static memory file with local memory tasks array
             fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
         }
+        // Make a task importand/default
+        else if (reqType === "important") {
+            try {
+                const index = req.body.index, taskIsImportant = taskDB[userID][req.body.index].important;
+                if (!taskIsImportant)
+                    taskDB[userID][req.body.index].important = true;
+                else
+                    taskDB[userID][req.body.index].important = false;
+            }
+            catch (error) {
+                serverError(res, error);
+                return;
+            }
+        }
+        // Overwrite static memory file with local memory tasks array
+        fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
     }
     catch (error) {
         serverError(res, error);

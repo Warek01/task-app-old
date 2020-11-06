@@ -78,7 +78,7 @@
         const newUser = "<%= newUser %>" === "true";
     </script>
 
-    <% if (tasks.length > 0) { %> 
+    <% if (locals.tasks && locals.tasks.length > 0) { %> 
         <style>
             #banner-empty { display: none; }
         </style>
@@ -87,11 +87,13 @@
     <script src="./jquery.js"></script>
     <script src="./Task.js"></script>
     <script src="./script.js"></script>
-    
-    <% tasks.forEach(element => { %> 
-        <script>
-            postTask("<%= element.content %>", "<%= element.timestamp %>");
-        </script>
-    <% }); %> 
+    <% if (locals.tasks) { %> 
+        <% tasks.forEach(element => { %> 
+            <script>
+                postTask("<%= element.content %>", "<%= element.timestamp %>", 
+                "<%= element.important %>" === "true");
+            </script>
+        <% }); %> 
+    <% } %> 
 </body>
 </html>

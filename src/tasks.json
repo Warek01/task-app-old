@@ -1,12 +1,21 @@
 {
   "alex": [
     {
-      "content": "Hello there!",
-      "timestamp": 1604412054865
+      "content": "Hello",
+      "timestamp": 1604505117984,
+      "important": false
     },
     {
-      "content": "123",
-      "timestamp": 1604415067685
+      "content": "Hello World!",
+      "timestamp": 1604506283955,
+      "important": false
+    }
+  ],
+  "victor": [
+    {
+      "content": "Hello !!!!!",
+      "timestamp": 1604512063296,
+      "important": true
     }
   ]
 }

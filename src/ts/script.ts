@@ -168,7 +168,8 @@ Array.prototype.has = function(element: any): boolean {
    return false;
 }
 
-function postTask(content: string | null = null, timestamp: number | string | null = null) {
+function postTask(content: string | null = null, timestamp: number | string | null = null,
+       isImportant: boolean = false) {
    // Text field
    let textInput: JQuery = inputDiv.find("input"),
       task: Task;
@@ -191,7 +192,8 @@ function postTask(content: string | null = null, timestamp: number | string | nu
       fetch(`/users/${userID}`, {
          method: "POST",
          headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "_meta": "post"
          },
          body: JSON.stringify({content: task.content, timestamp: task.timestamp})
       }).then(res => res.text()).then(res => {
@@ -200,7 +202,11 @@ function postTask(content: string | null = null, timestamp: number | string | nu
    } else {
       // If task is present (received from the server)
       // Only make it, no post and send
-      new Task(content, Number(timestamp));
+      let task: Task = new Task(content, Number(timestamp));
+
+      if (isImportant)
+         $(task.element).addClass("active")
+         .find("button.mark").text("Mark as default").addClass("active");
    }
 
    tempTextElements = $(".text-col");
@@ -208,7 +214,6 @@ function postTask(content: string | null = null, timestamp: number | string | nu
 
 type modalType = "ok" | "error" | "info";
 
-/* Trebuie de facut Error modal window */
 function showModalWindow(type: modalType = "ok", text: string = ""): void {
    let textContent: JQuery = $(".modal .content");
 

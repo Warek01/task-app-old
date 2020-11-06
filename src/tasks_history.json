@@ -1,6 +1,7 @@
 [
   {
-    "content": "123",
-    "timestamp": 1604415067685
+    "content": "Hello",
+    "timestamp": 1604512063296,
+    "important": false
   }
 ]

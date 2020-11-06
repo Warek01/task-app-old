@@ -1,6 +1,6 @@
 "use strict";
 class Task {
-    constructor(content, timestamp = Date.now()) {
+    constructor(content, timestamp = Date.now(), isImportant = false) {
         this.timestamp = timestamp;
         let task = $("<div>", {
             "class": "task"
@@ -28,12 +28,7 @@ class Task {
         // Task delete logic
         deleteBtn.click(function (event) {
             /** Index of given task in main-content */
-            let index = 0;
-            for (let em of main_content.children(".task")) {
-                if ($(em).text() === $(this).parent().text())
-                    break;
-                index++;
-            }
+            const index = Task.getTaskIndex(this.parentElement);
             fetch(`/users/${userID}?index=${index}`, {
                 method: "DELETE"
             }).then(res => {
@@ -77,24 +72,20 @@ class Task {
         // given task on server
         taskContent.on({
             focusout: function (event) {
-                console.log($(this).text() !== this.oldContent);
                 if (Boolean($(this).attr("contenteditable"))) {
                     $(this).removeAttr("contenteditable").css("color", colorSetting.currentTextCol);
                     // If the task content hasn't changed
-                    if ($(this).text() !== this.oldContent)
-                        return;
+                    /* if ($(this).text() !== this.oldContent)
+                       return; */
                     try {
                         /** Index of given task in main-content */
-                        let index = 0;
-                        for (let em of main_content.children(".task")) {
-                            if ($(em).text() === $(this).parent().text())
-                                break;
-                            index++;
-                        }
-                        fetch("/", {
+                        const index = Task.getTaskIndex(this.parentElement);
+                        console.log(index);
+                        fetch(`/users/${userID}`, {
                             method: "POST",
                             headers: {
-                                "Content-Type": "application/json"
+                                "Content-Type": "application/json",
+                                "_meta": "update"
                             },
                             body: JSON.stringify({
                                 index: index,
@@ -116,6 +107,32 @@ class Task {
                     $(this).trigger("focusout");
             }
         });
+        // "Mark as important" button
+        markBtn.click(function (event) {
+            const parent = $(this).parent();
+            const index = Task.getTaskIndex(this.parentElement);
+            // if not important
+            parent.css("transition", "background-color 300ms ease");
+            if (!$(this).hasClass("active")) {
+                parent.addClass("active");
+                $(this).text("Mark as default").addClass("active");
+            }
+            else {
+                parent.removeClass("active");
+                $(this).text("Mark as important").removeClass("active");
+            }
+            setTimeout(() => {
+                parent.css("transition", "background-color 0s");
+            }, 300);
+            fetch(`/users/${userID}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    _meta: "important",
+                },
+                body: JSON.stringify({ index: index }),
+            });
+        });
         taskContent.css("color", colorSetting.currentTextCol);
         task.append(taskContent, taskTimestamp, markBtn, editBtn, copyBtn, deleteBtn);
         main_content.append(task);
@@ -126,6 +143,19 @@ class Task {
     css(prop, value = null) {
         value ? this.element.css(prop, value) : this.element.css(prop);
         return this;
+    }
+    /**
+     * @param task task element to track
+     * @returns index of given task in main container
+     */
+    static getTaskIndex(task) {
+        let index = 0;
+        for (let em of main_content.children(".task")) {
+            if ($(em).text() === $(task).text())
+                break;
+            index++;
+        }
+        return index;
     }
     static getDay(date) {
         switch (date) {

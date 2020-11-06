@@ -127,7 +127,7 @@ Array.prototype.has = function (element) {
     }
     return false;
 };
-function postTask(content = null, timestamp = null) {
+function postTask(content = null, timestamp = null, isImportant = false) {
     // Text field
     let textInput = inputDiv.find("input"), task;
     if (!content && !timestamp) {
@@ -148,7 +148,8 @@ function postTask(content = null, timestamp = null) {
         fetch(`/users/${userID}`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "_meta": "post"
             },
             body: JSON.stringify({ content: task.content, timestamp: task.timestamp })
         }).then(res => res.text()).then(res => {
@@ -158,11 +159,13 @@ function postTask(content = null, timestamp = null) {
     else {
         // If task is present (received from the server)
         // Only make it, no post and send
-        new Task(content, Number(timestamp));
+        let task = new Task(content, Number(timestamp));
+        if (isImportant)
+            $(task.element).addClass("active")
+                .find("button.mark").text("Mark as default").addClass("active");
     }
     tempTextElements = $(".text-col");
 }
-/* Trebuie de facut Error modal window */
 function showModalWindow(type = "ok", text = "") {
     let textContent = $(".modal .content");
     switch (type) {

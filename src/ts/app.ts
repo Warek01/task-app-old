@@ -52,32 +52,65 @@ app.route("/users/:userID").get((req, res, next): void => {
       serverError(res, error);
       return;
    }
-}).post(express.json({strict: true}), (req, res, next): void => {
-   try {
+})
+// All post/update request
+.post(express.json({strict: true}), (req, res, next): void => {
 
-      let userID: string = req.params.userID.toLowerCase();
-      if (!req.body.index) {
+   interface reqBody {
+      content: string | null | undefined,
+      timestamp?: string | number,
+      index?: number,
+      important?: boolean
+   }
+
+   try {
+      let userID: string = req.params.userID.toLowerCase(),
+         reqType: string = req.header("_meta");
+
+      if (reqType === "post") {
          // Get request body (task)
-         let body: {content: string, timestamp: string} = req.body,
+         let body: reqBody = req.body,
             tasksHistory: any = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+
+         body.important = false;
 
          // Push gotten task to local memory tasks array
          tasksHistory.push(body);
          taskDB[userID].push(body);
 
          // Overwrite static memory file with local memory tasks array
-         fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
          fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {});
       } 
       // Task content update logic
-      else {
-         let body: {index: number, content: string} = req.body;
+      else if (reqType === "update") {
+         let body: reqBody = {
+            index: req.body.index, 
+            content: req.body.content
+         };
 
          // Update required task content to gotten one
          taskDB[userID][body.index].content = body.content;
-         // Overwrite static memory file with local memory tasks array
          fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
       }
+      // Make a task importand/default
+      else if (reqType === "important") {
+         try {
+            const index: number = req.body.index,
+               taskIsImportant: boolean = taskDB[userID][req.body.index].important
+
+            if (!taskIsImportant)
+               taskDB[userID][req.body.index].important = true;
+            else
+               taskDB[userID][req.body.index].important = false;
+         } catch(error) {
+            serverError(res, error);
+            return;
+         }
+      }
+
+      // Overwrite static memory file with local memory tasks array
+      fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+
    } catch(error) {
       serverError(res, error);
       return;
