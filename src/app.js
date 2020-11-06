@@ -48,16 +48,16 @@ app.route("/users/:userID").get((req, res, next) => {
     // All post/update request
     .post(express.json({ strict: true }), (req, res, next) => {
     try {
-        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta");
+        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta"), tasksHistory = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
         if (reqType === "post") {
             // Get request body (task)
-            let body = req.body, tasksHistory = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+            let body = req.body;
             body.important = false;
             // Push gotten task to local memory tasks array
             tasksHistory.push(body);
             taskDB[userID].push(body);
             // Overwrite static memory file with local memory tasks array
-            fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => { });
+            /* fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {}); */
         }
         // Task content update logic
         else if (reqType === "update") {
@@ -85,6 +85,7 @@ app.route("/users/:userID").get((req, res, next) => {
         }
         // Overwrite static memory file with local memory tasks array
         fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+        fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => { });
     }
     catch (error) {
         serverError(res, error);

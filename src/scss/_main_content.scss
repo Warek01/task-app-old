@@ -83,7 +83,7 @@
             letter-spacing: 1px;
             color: #eee;
             
-            transition: all .3s ease;
+            transition: all 300ms ease;
         }
 
         p {
@@ -103,7 +103,7 @@
             color: #fff;
             background-color: #1e90ff;
 
-            transition: all .3s ease;
+            transition: all 300ms ease;
 
             &:focus { outline: none; }
             &:not(:first-of-type) {
@@ -111,6 +111,10 @@
             }
             &.active {
                 background-color: gray;
+            }
+            &:hover {
+                box-shadow: 0 0 45px lighten(#1e90ff, 20%),
+                    0 0 90px lighten(#1e90ff, 20%);
             }
         }
     }

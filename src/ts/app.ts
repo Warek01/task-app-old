@@ -65,12 +65,12 @@ app.route("/users/:userID").get((req, res, next): void => {
 
    try {
       let userID: string = req.params.userID.toLowerCase(),
-         reqType: string = req.header("_meta");
+         reqType: string = req.header("_meta"),
+         tasksHistory: {}[] = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
 
       if (reqType === "post") {
          // Get request body (task)
-         let body: reqBody = req.body,
-            tasksHistory: any = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+         let body: reqBody = req.body;
 
          body.important = false;
 
@@ -79,7 +79,7 @@ app.route("/users/:userID").get((req, res, next): void => {
          taskDB[userID].push(body);
 
          // Overwrite static memory file with local memory tasks array
-         fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {});
+         /* fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {}); */
       } 
       // Task content update logic
       else if (reqType === "update") {
@@ -97,19 +97,20 @@ app.route("/users/:userID").get((req, res, next): void => {
          try {
             const index: number = req.body.index,
                taskIsImportant: boolean = taskDB[userID][req.body.index].important
-
+               
             if (!taskIsImportant)
-               taskDB[userID][req.body.index].important = true;
+            taskDB[userID][req.body.index].important = true;
             else
-               taskDB[userID][req.body.index].important = false;
+            taskDB[userID][req.body.index].important = false;
          } catch(error) {
             serverError(res, error);
             return;
          }
       }
-
+      
       // Overwrite static memory file with local memory tasks array
       fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+      fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {});
 
    } catch(error) {
       serverError(res, error);

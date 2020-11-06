@@ -8,6 +8,11 @@
     {
       "content": "Hello World!",
       "timestamp": 1604506283955,
+      "important": true
+    },
+    {
+      "content": "12345",
+      "timestamp": 1604685321438,
       "important": false
     }
   ],
