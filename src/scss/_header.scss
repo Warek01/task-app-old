@@ -69,7 +69,7 @@ header {
             }
 
             &:hover ul.content {
-                height: 230px;
+                height: 282px;
                 width: 160px;
                 margin-left: -20px;
             }
@@ -116,6 +116,10 @@ header {
                     }
 
                     &:nth-of-type(4) {
+                        height: 50px;
+                        border-bottom: 2px solid black;
+                    }
+                    &:nth-of-type(5) {
                         height: 50px;
                         border-bottom: 2px solid black;
                     }

@@ -9,7 +9,7 @@
    grid-template-columns: 1fr 2fr;
    align-content: center;
    justify-content: center;
-   background-color: rgba(#4cd137, .9);
+   text-transform: uppercase;
    border-radius: 5px;
    pointer-events: none;
    filter: opacity(0);
@@ -28,7 +28,7 @@
 
    img {
       position: relative;
-      left: 110px;
+      left: 80px;
       bottom: 5px;
       width: 36px;
       height: 36px;

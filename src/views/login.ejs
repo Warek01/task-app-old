@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="IE=10">
+   <meta name="keywords" content="login, register">
+   <meta name="description" content="">
+   <!-- <base href="/"> -->
+   <link rel="shortcut icon" href="./img/icon.jpg" type="image/x-icon">
+   <link rel="stylesheet" href="./views/sources/login_style.css">
+   <title>Login</title>
+</head>
+<body>
+
+   <div class="wrapper">
+      <div class="login">
+         <div class="img-wrap">
+            <img src="./img/user.png" alt="log in" class="user">
+         </div>
+         <label for="user-name">
+            <p>
+               User
+            </p>
+         </label>
+         <input type="text" name="login" id="user-name" placeholder="User name here">
+         <br>
+         <button onclick="renderPage()">
+            GO
+         </button>
+         <button onclick="location = '/nouser'">
+            WITHOUT USER
+         </button>
+      </div>
+   </div>
+
+   <script src="./jquery.js"></script>
+   <script src="./views/sources/login_script.js"></script>
+
+</body>
+</html>

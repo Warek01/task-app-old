@@ -13,27 +13,37 @@ const bg_colors: string[] = [ "#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
 "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d" ],
 text_colors: string[] = [ "#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794" ];
 
-let tempTextElements: JQuery = $(".text-col");
-let colorSetting = {
-   originalBg: body.css("background-color"),
-   currentBg: body.css("background-color"),
-   bgIndex: 0,
-   originalTextCol: tempTextElements.eq(0).css("color"),
-   currentTextCol:  tempTextElements.eq(0).css("color"),
-   textIndex: 0,
-   
-   reset(): void {
-      body.css("background-color", this.originalBg);
-      tempTextElements.css("color", this.originalTextCol);
-      $("#textcol").css("background-color", this.originalTextCol);
-      $("#bgcol").css("background-color", this.originalBg);
-      $(".circle-bgc").css("background-color", this.originalBg);
-      this.currentBg = this.originalBg;
-      this.currentTextCol = this.originalTextCol;
-      this.bgIndex = 0;
-      this.textIndex = 0;
-   }
-};
+let tempTextElements: JQuery = $(".text-col"),
+   colorSetting = {
+      originalBg: body.css("background-color"),
+      currentBg: body.css("background-color"),
+      bgIndex: 0,
+      originalTextCol: tempTextElements.eq(0).css("color"),
+      currentTextCol:  tempTextElements.eq(0).css("color"),
+      textIndex: 0,
+      
+      reset(): void {
+         body.css("background-color", this.originalBg);
+         tempTextElements.css("color", this.originalTextCol);
+         $("#textcol").css("background-color", this.originalTextCol);
+         $("#bgcol").css("background-color", this.originalBg);
+         $(".circle-bgc").css("background-color", this.originalBg);
+         this.currentBg = this.originalBg;
+         this.currentTextCol = this.originalTextCol;
+         this.bgIndex = 0;
+         this.textIndex = 0;
+      }
+   };
+
+
+// Global variables
+declare const userID: string;
+/** Whether user is newly created or not */
+declare const newUser: boolean;
+
+
+if (newUser)
+   showModalWindow("info", "Welcome!");
 
 // Help banner toggler
 options.find(".help").click(function(event): void {
@@ -133,7 +143,7 @@ $(window).keydown(function(event?): void {
          break;
       case "Enter":
          // Post the task from input
-         postTask();
+            postTask();
          break;
       case "Escape":
          // Close help banner
@@ -158,7 +168,8 @@ Array.prototype.has = function(element: any): boolean {
    return false;
 }
 
-function postTask(content: string | null = null, timestamp: number | null = null) {
+function postTask(content: string | null = null, timestamp: number | string | null = null,
+       isImportant: boolean = false) {
    // Text field
    let textInput: JQuery = inputDiv.find("input"),
       task: Task;
@@ -176,13 +187,13 @@ function postTask(content: string | null = null, timestamp: number | null = null
          task = new Task(String(textInput.val()).trim());
          textInput.val("");
       }
-      tempTextElements = $(".text-col");
 
       // Send the new task to server
-      fetch("/", {
+      fetch(`/users/${userID}`, {
          method: "POST",
          headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "_meta": "post"
          },
          body: JSON.stringify({content: task.content, timestamp: task.timestamp})
       }).then(res => res.text()).then(res => {
@@ -191,15 +202,47 @@ function postTask(content: string | null = null, timestamp: number | null = null
    } else {
       // If task is present (received from the server)
       // Only make it, no post and send
-      new Task(content, timestamp);
+      let task: Task = new Task(content, Number(timestamp));
+
+      if (isImportant)
+         $(task.element).addClass("active")
+         .find("button.mark").text("Mark as default").addClass("active");
    }
+
+   tempTextElements = $(".text-col");
 }
 
-function showModalWindow(): void {
+type modalType = "ok" | "error" | "info";
+
+function showModalWindow(type: modalType = "ok", text: string = ""): void {
+   let textContent: JQuery = $(".modal .content");
+
+   switch(type) {
+      case "ok": 
+         modal.css("background-color", "#4cd137cf");
+         textContent.text("done!");
+         break;
+      case "error": 
+         modal.css("background-color", "#e84118cf");
+         textContent.text("error!");
+         break;
+      case "info": 
+         modal.css("background-color", "#535c68ff");
+         textContent.text(text);
+
+         modal.css("transition", "filter 75ms linear");
+         modal.css("filter", "opacity(1)");
+         setTimeout(() => {
+            modal.css("filter", "opacity(0)");
+            modal.css("transition", "filter .3s ease");
+         }, 2250);
+         return;
+   }
+
    modal.css("transition", "filter 75ms linear");
    modal.css("filter", "opacity(1)");
    setTimeout(() => {
       modal.css("filter", "opacity(0)");
       modal.css("transition", "filter .3s ease");
-   }, 750);
+   }, 1250);
 }

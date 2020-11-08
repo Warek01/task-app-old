@@ -6,14 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=10">
     <meta name="description" content="To Do simple web application">
     <meta name="keywords" content="To Do, Task">
-    <link rel="shortcut icon" href="./src/img/icon.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="./src/style.css">
+    <base href="/">
+    <link rel="shortcut icon" href="img/icon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="./style.css">
     <title>Task app</title>
 </head>
 <body>
 
     <div class="modal">
-        <img src="./src/img/checkmark-black-32.png" alt="Done">
+        <img src="./img/checkmark-black-32.png" alt="Done">
         <span class="content">Done</span>
     </div>
 
@@ -34,6 +35,7 @@
                     <li class="text-col bgc"><p>Change background color</p> <div id="bgcol"></li>
                     <li class="text-col textc"><p>Change text color</p> <div id="textcol"></li>
                     <li class="text-col reset"><p>Reset</li>
+                    <li class="text-col reset" onclick="document.location = '/history'"><p>View History</li>
                 </ul>
             </button>
         </div>
@@ -41,7 +43,7 @@
 
     <div id="input">
         <div class="wrapper">
-            <img src="./src/img/ok-48.png" alt="">
+            <img src="./img/ok-48.png" alt="">
             <input type="text" placeholder="What's on your mind?" name="text-input" class="text-col">
         </div>
         <button id="insert">
@@ -71,20 +73,27 @@
         <button id="close-btn">close</button>
     </div>
 
-    <script src="./src/jquery.js"></script>
-    <script src="./src/task.js"></script>
-    <script src="./src/script.js"></script>
+    <script>
+        const userID = "<%= userID %>";
+        const newUser = "<%= newUser %>" === "true";
+    </script>
 
-    <% if(locals.tasks.length > 0) { %> 
-        <% tasks.forEach(element => { %>
-            <script>
-                new Task("<%= element.content %>", Number("<%= element.timestamp %>"));
-            </script>
-        <% }) %>
-
+    <% if (locals.tasks && locals.tasks.length > 0) { %> 
         <style>
             #banner-empty { display: none; }
-         </style>
-     <% } %> 
+        </style>
+    <% } %> 
+    
+    <script src="./jquery.js"></script>
+    <script src="./Task.js"></script>
+    <script src="./script.js"></script>
+    <% if (locals.tasks) { %> 
+        <% tasks.forEach(element => { %> 
+            <script>
+                postTask("<%= element.content %>", "<%= element.timestamp %>", 
+                "<%= element.important %>" === "true");
+            </script>
+        <% }); %> 
+    <% } %> 
 </body>
 </html>
