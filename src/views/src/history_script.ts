@@ -1,5 +1,11 @@
 let taskCount: number = 0,
+  modal: JQuery =  $(".modal"),
   emptyBanner: JQuery = $("#empty");
+
+$(document).ready(function(): void {
+  if ($(".main-content").children().length > 0)
+    emptyBanner.hide()
+});
 
 function makeTask(content: string, timestamp: string | number): void {
   let task = $("<div>", {
@@ -40,7 +46,7 @@ function clearHistory(): void {
 
     $(".main-content").children(".task").remove();
 
-    showModalWindow(modalTypes.OK);
+    showModalWindow("ok");
   }
 }
 
@@ -91,38 +97,44 @@ function getMonth(month: number): string {
   }
 }
 
-enum modalTypes {
-  OK,
-  ERROR,
-  INFO,
+type modalType = "ok" | "error" | "info";
+
+function showModalWindow(type: modalType = "ok", text: string = ""): void {
+   let textContent: JQuery = $(".modal .content");
+
+   switch(type) {
+      case "ok": 
+         modal.css("background-color", "#4cd137cf");
+         textContent.text("done!");
+         break;
+      case "error": 
+         modal.css("background-color", "#e84118cf");
+         textContent.text("error!");
+         break;
+      case "info": 
+         modal.css("background-color", "#535c68ff");
+         textContent.text(text);
+
+         modal.css("transition", "filter 75ms linear");
+         modal.css("filter", "opacity(1)");
+         setTimeout(() => {
+            modal.css("filter", "opacity(0)");
+            modal.css("transition", "filter .3s ease");
+         }, 2250);
+         return;
+   }
+
+   modal.css("transition", "filter 75ms linear");
+   modal.css("filter", "opacity(1)");
+   setTimeout(() => {
+      modal.css("filter", "opacity(0)");
+      modal.css("transition", "filter .3s ease");
+   }, 1250);
 }
 
-function showModalWindow(
-  type: modalTypes = modalTypes.OK,
-  text: string = null
-): void {
-  let textContent: JQuery = $(".modal .content"),
-    modal: JQuery = $(".modal");
 
-  switch (type) {
-    case modalTypes.OK:
-      modal.css("background-color", "#4cd137bf");
-      textContent.text("done!");
-      break;
-    case modalTypes.ERROR:
-      modal.css("background-color", "#e84118bf");
-      textContent.text("error!");
-      break;
-    case modalTypes.INFO:
-      modal.css("background-color", "#f5f6fabf");
-      textContent.text(text);
-      break;
+function sendBack(): void {
+  if (window.history && typeof window.history === "object") {
+    window.history.back();
   }
-
-  modal.css("transition", "filter 75ms linear");
-  modal.css("filter", "opacity(1)");
-  setTimeout(() => {
-    modal.css("filter", "opacity(0)");
-    modal.css("transition", "filter .3s ease");
-  }, 750);
 }

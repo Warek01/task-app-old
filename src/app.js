@@ -80,25 +80,16 @@ app.route("/users/:userID").get((req, res, next) => {
 })
     .post(express_1.default.json({ strict: true }), (req, res, next) => {
     try {
-        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta");
+        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta"), tasksHistory = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
         if (reqType === "post") {
+            // Get request body (task)
             let body = req.body;
-            models.Users.exists({ userName: userID }, async (err, exists) => {
-                if (err)
-                    throw err;
-                if (exists) {
-                    let user = await models.Users.findOneAndUpdate({ userName: userID }, {
-                        $addToSet: {
-                            tasks: {
-                                content: body.content,
-                                timestamp: Number(body.timestamp),
-                                isImportant: body.important
-                            }
-                        }
-                    });
-                    res.send(user._id);
-                }
-            });
+            body.important = false;
+            // Push gotten task to local memory tasks array
+            tasksHistory.push(body);
+            taskDB[userID].push(body);
+            // Overwrite static memory file with local memory tasks array
+            /* fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {}); */
         }
         else if (reqType === "update") {
             let body = {
@@ -121,7 +112,9 @@ app.route("/users/:userID").get((req, res, next) => {
                 return;
             }
         }
-        fs_1.default.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+        // Overwrite static memory file with local memory tasks array
+        fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+        fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => { });
     }
     catch (error) {
         serverError(res, error);

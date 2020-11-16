@@ -20,7 +20,7 @@
       <h1>
          History
       </h1>
-      <button onclick="document.location = '/'">
+      <button onclick="sendBack()">
          Home
       </button>
       <button id="clear-btn" onclick="clearHistory(this)">
@@ -36,18 +36,15 @@
    </div>
 
    <script src="./jquery.js"></script>
-   <script src="./views/src/history_script.js"></script>
+   <script src="./views/sources/history_script.js"></script>
 
-   <% if (locals.tasks.length > 0) { %>
-   <script>
-      emptyBanner.hide();
-   </script>
-   <% for (let task of tasks) { %>
-   <script>
-      makeTask("<%= task.content %>", Number("<%= task.timestamp %>"));
-   </script>
-   <% } %>
-   <% } %>
+   <% if (locals.tasks.length > 0) { %> 
+      <% for (let task of tasks) { %> 
+         <script>
+            makeTask("<%= task.content %>", Number("<%= task.timestamp %>"));
+         </script>
+      <% } %> 
+   <% } %> 
 </body>
 
 </html>

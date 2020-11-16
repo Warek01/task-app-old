@@ -1,4 +1,8 @@
-let taskCount = 0, emptyBanner = $("#empty");
+let taskCount = 0, modal = $(".modal"), emptyBanner = $("#empty");
+$(document).ready(function () {
+    if ($(".main-content").children().length > 0)
+        emptyBanner.hide();
+});
 function makeTask(content, timestamp) {
     let task = $("<div>", {
         class: "task",
@@ -24,7 +28,7 @@ function clearHistory() {
             .then((res) => res.text())
             .then((res) => console.log(res));
         $(".main-content").children(".task").remove();
-        showModalWindow(modalTypes.OK);
+        showModalWindow("ok");
     }
 }
 function getDay(date) {
@@ -73,32 +77,37 @@ function getMonth(month) {
             return "Dec";
     }
 }
-var modalTypes;
-(function (modalTypes) {
-    modalTypes[modalTypes["OK"] = 0] = "OK";
-    modalTypes[modalTypes["ERROR"] = 1] = "ERROR";
-    modalTypes[modalTypes["INFO"] = 2] = "INFO";
-})(modalTypes || (modalTypes = {}));
-function showModalWindow(type = modalTypes.OK, text = null) {
-    let textContent = $(".modal .content"), modal = $(".modal");
+function showModalWindow(type = "ok", text = "") {
+    let textContent = $(".modal .content");
     switch (type) {
-        case modalTypes.OK:
-            modal.css("background-color", "#4cd137bf");
+        case "ok":
+            modal.css("background-color", "#4cd137cf");
             textContent.text("done!");
             break;
-        case modalTypes.ERROR:
-            modal.css("background-color", "#e84118bf");
+        case "error":
+            modal.css("background-color", "#e84118cf");
             textContent.text("error!");
             break;
-        case modalTypes.INFO:
-            modal.css("background-color", "#f5f6fabf");
+        case "info":
+            modal.css("background-color", "#535c68ff");
             textContent.text(text);
-            break;
+            modal.css("transition", "filter 75ms linear");
+            modal.css("filter", "opacity(1)");
+            setTimeout(() => {
+                modal.css("filter", "opacity(0)");
+                modal.css("transition", "filter .3s ease");
+            }, 2250);
+            return;
     }
     modal.css("transition", "filter 75ms linear");
     modal.css("filter", "opacity(1)");
     setTimeout(() => {
         modal.css("filter", "opacity(0)");
         modal.css("transition", "filter .3s ease");
-    }, 750);
+    }, 1250);
+}
+function sendBack() {
+    if (window.history && typeof window.history === "object") {
+        window.history.back();
+    }
 }
