@@ -1,4 +1,9 @@
 "use strict";
+// interface Task {
+//    content: string;
+//    element: JQuery;
+//    timestamp: number;
+// }
 class Task {
     constructor(content, timestamp = Date.now(), isImportant = false) {
         this.timestamp = timestamp;
@@ -166,6 +171,7 @@ class Task {
             case 5: return "Fri";
             case 6: return "Sat";
             case 7: return "Sun";
+            default: return "";
         }
     }
     static getMonth(month) {
@@ -182,6 +188,7 @@ class Task {
             case 9: return "Oct";
             case 10: return "Nov";
             case 11: return "Dec";
+            default: return "";
         }
     }
 }

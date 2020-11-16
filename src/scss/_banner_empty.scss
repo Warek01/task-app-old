@@ -1,36 +1,35 @@
 #banner-empty {
+  position: absolute;
+  display: flex;
+  width: 95%;
+  height: 100px;
+  top: 42.5vh;
+  margin: 0 2.5% 0 2.5%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 
-   position: absolute;
-   display: flex;
-   width: 95%;
-   height: 100px;
-   top: 42.5vh;
-   margin: 0 2.5% 0 2.5%;
-   text-align: center;
-   justify-content: center;
-   align-items: center;
+  h1 {
+    margin-top: 10px;
+  }
 
-   h1 {
-      margin-top: 10px;
-   }
+  &::before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    height: 1px;
+    width: 95%;
+    background-color: black;
+  }
 
-   &::before {
-      content: "";
-      position: absolute;
-      display: block;
-      top: 0;
-      height: 1px;
-      width: 95%;
-      background-color: black;
-   }
-
-   &::after {
-      content: "";
-      position: absolute;
-      display: block;
-      bottom: 0;
-      height: 1px;
-      width: 85%;
-      background-color: black;
-   }
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    bottom: 0;
+    height: 1px;
+    width: 85%;
+    background-color: black;
+  }
 }

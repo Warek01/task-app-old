@@ -21,6 +21,13 @@ let tempTextElements = $(".text-col"), colorSetting = {
         this.textIndex = 0;
     }
 };
+// declare class Task { 
+//    content: string;
+//    timestamp: number;
+//    element: HTMLElement;
+//    isImportant?: boolean;
+//    constructor(content: string, timestamp?: number);
+// };
 if (newUser)
     showModalWindow("info", "Welcome!");
 // Help banner toggler
@@ -127,9 +134,9 @@ Array.prototype.has = function (element) {
     }
     return false;
 };
-function postTask(content = null, timestamp = null, isImportant = false) {
+function postTask(content = null, timestamp = null, isImportant = false, id = null) {
     // Text field
-    let textInput = inputDiv.find("input"), task;
+    let textInput = inputDiv.find("input"), task = new Task("");
     if (!content && !timestamp) {
         if ((textInput.is(":focus") || $("#insert").is(":focus")) && textInput.val().toString().trim() !== "") {
             if (banner_empty.css("display") !== "none") {
@@ -153,13 +160,15 @@ function postTask(content = null, timestamp = null, isImportant = false) {
             },
             body: JSON.stringify({ content: task.content, timestamp: task.timestamp })
         }).then(res => res.text()).then(res => {
-            console.log(res);
+            $(task.element).attr("data-id", res);
         });
     }
     else {
         // If task is present (received from the server)
         // Only make it, no post and send
-        let task = new Task(content, Number(timestamp));
+        let task = new Task(content, Number(timestamp), isImportant);
+        if (id)
+            $(task.element).attr("data-id", id);
         if (isImportant)
             $(task.element).addClass("active")
                 .find("button.mark").text("Mark as default").addClass("active");

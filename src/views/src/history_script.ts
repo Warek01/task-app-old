@@ -92,32 +92,37 @@ function getMonth(month: number): string {
 }
 
 enum modalTypes {
-  OK, ERROR, INFO
+  OK,
+  ERROR,
+  INFO,
 }
 
-function showModalWindow(type: modalTypes = modalTypes.OK, text: string = null): void {
+function showModalWindow(
+  type: modalTypes = modalTypes.OK,
+  text: string = null
+): void {
   let textContent: JQuery = $(".modal .content"),
     modal: JQuery = $(".modal");
 
-  switch(type) {
-     case modalTypes.OK: 
-        modal.css("background-color", "#4cd137bf");
-        textContent.text("done!");
-        break;
-     case modalTypes.ERROR: 
-        modal.css("background-color", "#e84118bf");
-        textContent.text("error!");
-        break;
-     case modalTypes.INFO: 
-        modal.css("background-color", "#f5f6fabf");
-        textContent.text(text);
-        break;
+  switch (type) {
+    case modalTypes.OK:
+      modal.css("background-color", "#4cd137bf");
+      textContent.text("done!");
+      break;
+    case modalTypes.ERROR:
+      modal.css("background-color", "#e84118bf");
+      textContent.text("error!");
+      break;
+    case modalTypes.INFO:
+      modal.css("background-color", "#f5f6fabf");
+      textContent.text(text);
+      break;
   }
 
   modal.css("transition", "filter 75ms linear");
   modal.css("filter", "opacity(1)");
   setTimeout(() => {
-     modal.css("filter", "opacity(0)");
-     modal.css("transition", "filter .3s ease");
+    modal.css("filter", "opacity(0)");
+    modal.css("transition", "filter .3s ease");
   }, 750);
 }

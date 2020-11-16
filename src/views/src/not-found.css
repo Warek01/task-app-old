@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;700&display=swap");
+/* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
+/* font-family: 'Open Sans', sans-serif; -Content- */
+@font-face {
+  font-family: 'Fira Code';
+  src: url("fonts/subset-FiraCode-Regular.eot");
+  src: local("Fira Code Regular"), local("FiraCode-Regular"), url("fonts/subset-FiraCode-Regular.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Regular.woff2") format("woff2"), url("fonts/subset-FiraCode-Regular.woff") format("woff"), url("fonts/subset-FiraCode-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Fira Code';
+  src: url("fonts/subset-FiraCode-Light.eot");
+  src: local("Fira Code Light"), local("FiraCode-Light"), url("fonts/subset-FiraCode-Light.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Light.woff2") format("woff2"), url("fonts/subset-FiraCode-Light.woff") format("woff"), url("fonts/subset-FiraCode-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: fallback;
+}
+body {
+  margin: 0;
+  background-color: #74b9ff;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+}
+
+header {
+  position: relative;
+}
+header::after {
+  content: "";
+  position: absolute;
+  display: block;
+  margin-left: 5%;
+  width: 90%;
+  height: 1px;
+  background-color: #6f6f6f;
+}
+header h2 {
+  font-family: 'Baloo Tamma 2', cursive;
+  position: relative;
+  display: inline-block;
+  margin: 5px 300px 0px;
+  font-size: 3em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+article {
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+article h1 {
+  font-size: 6.25em;
+  text-shadow: 3px 3px 3px #6f6f6f;
+  letter-spacing: 7px;
+  margin-top: 50px;
+}
+
+aside {
+  font-size: 20px;
+  text-align: center;
+}
+
+span.path {
+  color: #6c5ce7;
+}
+
+.go-back {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  bottom: 50px;
+}
+.go-back button {
+  padding: 7px 18px;
+  border: none;
+  background-color: rgba(9, 132, 227, 0.5);
+  color: #fff;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.go-back button:hover {
+  background-color: #0984e3;
+}
+.go-back button:focus {
+  outline: none;
+}
