@@ -25,7 +25,7 @@ const app = express(),
 let taskDB = JSON.parse(fs.readFileSync(task_path).toString()) || {};
 
 nodeArgs();
-app.use(cors());
+app.use(cors(), express.static(__dirname));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -34,18 +34,17 @@ app.get("/", (req: Request, res: Response, next: NextFunction): void => {
   res.redirect("/login");
 });
 
-// app.get("/users", (req: Request, res: Response, next: NextFunction): void => {
-//    res.redirect("/login");
-// }).get("/user", (req: Request, res: Response, next: NextFunction): void => {
-//    res.redirect("/login");
-// });
-
-//       /* /USERS/USERID */ ---------------
+//       /* /USERS/USERNAME */ ---------------
 app
-  .route("/users/:userID")
+  .route("/users/:userName")
   .get((req: Request, res: Response, next: NextFunction): void => {
     try {
-      let userName: string = req.params.userID.toLowerCase();
+      if (!req.params.userName) {
+        res.redirect("/404");
+        return;
+      }
+
+      const userName: string = req.params.userName;
 
       models.Users.exists(
         { userName: userName },
@@ -83,25 +82,25 @@ app
       return;
     }
   })
-  // All post/update request
+  // Task post request
   .post(
     express.json({ strict: true }),
     (req: Request, res: Response, next: NextFunction): void => {
       try {
-        let userID: string = req.params.userID.toLowerCase(),
-          reqType: string = req.header("_meta")!;
+        let userName: string = req.params.userName,
+          reqType: string = req.header("_meta") || "";
 
         if (reqType === "post") {
           // Get request body (task)
           let body: any = req.body;
 
           models.Users.exists(
-            { userName: userID },
+            { userName: userName },
             async (err: Error, exists: boolean): Promise<any> => {
               if (err) throw err;
               if (exists) {
                 let user: Document = await models.Users.findOneAndUpdate(
-                  { userName: userID },
+                  { userName: userName },
                   {
                     // Append given task to tasks array
                     $addToSet: {
@@ -118,36 +117,65 @@ app
               }
             }
           );
+
+          // Append new task to tasks history collection
+          new models.Tasks({
+            content: body.content,
+            timestamp: Number(body.timestamp),
+            isImportant: body.important,
+          }).save();
         }
+
         // Task content update logic
         else if (reqType === "update") {
-          let body = {
-            index: req.body.index!,
-            content: req.body.content!,
+          const body: any = {
+            content: req.body.content,
+            id: req.body.id,
           };
 
-          // Update required task content to gotten one
-          taskDB[userID][body.index!].content = body.content;
-          fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+          models.Users.exists(
+            { userName: userName },
+            async (err: Error, exists: boolean): Promise<any> => {
+              if (err) throw err;
+              if (exists) {
+                const user: Document = await models.Users.findOne({
+                  userName: userName,
+                });
+                (user as any).tasks.id(body.id).content = body.content;
+                user!.save();
+                res.sendStatus(200);
+              }
+            }
+          );
         }
+
         // Make a task importand/default
         else if (reqType === "important") {
           try {
-            const index: number = req.body.index,
-              taskIsImportant: boolean =
-                taskDB[userID][req.body.index].important;
+            const taskId: string = req.body.id;
+            models.Users.exists(
+              { userName: userName },
+              async (err: Error, exists: boolean): Promise<any> => {
+                if (err) throw err;
+                if (exists) {
+                  const user: Document = await models.Users.findOne({
+                    userName: userName,
+                  });
 
-            if (!taskIsImportant)
-              taskDB[userID][req.body.index].important = true;
-            else taskDB[userID][req.body.index].important = false;
+                  (user as any).tasks.id(
+                    taskId
+                  ).isImportant = !(user as any).tasks.id(taskId).isImportant;
+
+                  user!.save();
+                  res.sendStatus(200);
+                }
+              }
+            );
           } catch (error) {
             serverError(res, error);
             return;
           }
         }
-
-        // Overwrite static memory file with local memory tasks array
-        fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
       } catch (error) {
         serverError(res, error);
         return;
@@ -157,18 +185,30 @@ app
   // Task deleting logic
   .delete((req: Request, res: Response, next: NextFunction): void => {
     try {
-      let userID: string = req.params.userID.toLowerCase(),
-        index: number = Number(req.query.index);
+      const userName: string = req.params.userName,
+        taskId: string = req.query.id!.toString() || "";
+      console.log(taskId);
 
-      // Remove item from array
-      taskDB[userID].splice(index, 1);
-      // Overwrite static memory file with local memory tasks array
-      fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+      models.Users.exists(
+        { userName: userName },
+        async (err: Error, exists: boolean): Promise<any> => {
+          if (err) throw err;
+          if (exists) {
+            const user: Document = await models.Users.findOne({
+              userName: userName,
+            });
+
+            (user as any).tasks.id(taskId).remove();
+            user!.save();
+
+            res.sendStatus(200);
+          }
+        }
+      );
     } catch (error) {
       serverError(res, error);
       return;
     }
-    res.sendStatus(200);
   });
 // -------------------------- /* /USERS/USERID */
 
@@ -213,16 +253,14 @@ app
   });
 // -------------------------- /* /NOUSER */
 
-app.listen(nodeArgs().port, nodeArgs().port_log);
-// app.use(express.static(path.resolve(__dirname, "../")));
-app.use(express.static(__dirname));
-
-// Not Found page
-app.use((req: Request, res: Response, next: NextFunction): void => {
-  res.render("not-found.ejs", { path: req.path });
+//       /* /404 */ ---------------
+app.get("/404", (req: Request, res: Response, next: NextFunction): void => {
+  const reqPath: string = decodeURI((req.query.p || "").toString());
+  res.render("not-found.ejs", { path: reqPath });
 });
+// -------------------------- /* /404 */
 
-// --------------------------
+app.listen(nodeArgs().port, nodeArgs().port_log);
 
 /* Events */
 
@@ -306,3 +344,11 @@ function serverError(res: any, error: string): void {
   console.error(chalk.hex("#e74c3c")("Error: "), chalk.hex("#ff7979")(error));
   res.sendStatus(500);
 }
+
+// Not Found page
+// Last in code as if it is being handled (path or file exists)
+// it won't be called
+app.get("*", (req: Request, res: Response, next: NextFunction): void => {
+  // res.render("not-found.ejs", { path: req.path });
+  res.redirect(`/404?p=${encodeURI(req.path)}`);
+});

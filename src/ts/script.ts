@@ -193,12 +193,10 @@ function postTask(
 ) {
   // Text field
   let textInput: JQuery = inputDiv.find("input"),
-    task: Task = new Task("");
+    task: Task;
   if (!content && !timestamp) {
-    if (
-      (textInput.is(":focus") || $("#insert").is(":focus")) &&
-      textInput.val()!.toString().trim() !== ""
-    ) {
+    if ((textInput.is(":focus") || $("#insert").is(":focus")) &&
+      textInput.val()!.toString().trim() !== "") {
       if (banner_empty.css("display") !== "none") {
         banner_empty.css({
           top: "55vh",
@@ -220,13 +218,13 @@ function postTask(
         _meta: "post",
       },
       body: JSON.stringify({
-        content: task.content,
-        timestamp: task.timestamp,
+        content: task!.content,
+        timestamp: task!.timestamp,
       }),
     })
       .then((res) => res.text())
       .then((res) => {
-        $(task.element).attr("data-id", res);
+        $(task!.element).attr("data-id", res);
       });
   } else {
     // If task is present (received from the server)

@@ -116,7 +116,7 @@
     <% tasks.forEach(element => { %>
     <script>
         postTask("<%= element.content %>", "<%= element.timestamp %>",
-            "<%= element.important %>" === "true");
+            "<%= element.isImportant %>" === "true", "<%= element._id %>");
     </script>
     <% }); %>
     <% } %>

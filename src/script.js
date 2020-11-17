@@ -1,7 +1,24 @@
 "use strict";
 const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), modal = $(".modal"), inputDiv = $("#input"), inputElement = inputDiv.find("input"), inputCopy = $("#input-copy");
-const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
-    "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
+const bg_colors = [
+    "#1abc9c",
+    "#27ae60",
+    "#2980b9",
+    "#8e44ad",
+    "#2c3e50",
+    "#f39c12",
+    "#d35400",
+    "#c0392b",
+    "#bdc3c7",
+    "#7f8c8d",
+], text_colors = [
+    "#1B1464",
+    "#6F1E51",
+    "#353b48",
+    "#2bcbba",
+    "#26de81",
+    "#f7d794",
+];
 let tempTextElements = $(".text-col"), colorSetting = {
     originalBg: body.css("background-color"),
     currentBg: body.css("background-color"),
@@ -19,9 +36,9 @@ let tempTextElements = $(".text-col"), colorSetting = {
         this.currentTextCol = this.originalTextCol;
         this.bgIndex = 0;
         this.textIndex = 0;
-    }
+    },
 };
-// declare class Task { 
+// declare class Task {
 //    content: string;
 //    timestamp: number;
 //    element: HTMLElement;
@@ -91,10 +108,13 @@ banner_help.find("#close-btn").click(function (event) {
     options.css("pointer-events", "all");
 });
 // Main input extention when focused
-inputDiv.find(".wrapper").focusin(function (event) {
+inputDiv
+    .find(".wrapper")
+    .focusin(function (event) {
     $(this).find("input[type=text]").css("width", 625);
     $(this).css("width", 700);
-}).focusout(function (event) {
+})
+    .focusout(function (event) {
     $(this).find("input[type=text]").css("width", 370);
     $(this).css("width", 470);
 });
@@ -136,13 +156,14 @@ Array.prototype.has = function (element) {
 };
 function postTask(content = null, timestamp = null, isImportant = false, id = null) {
     // Text field
-    let textInput = inputDiv.find("input"), task = new Task("");
+    let textInput = inputDiv.find("input"), task;
     if (!content && !timestamp) {
-        if ((textInput.is(":focus") || $("#insert").is(":focus")) && textInput.val().toString().trim() !== "") {
+        if ((textInput.is(":focus") || $("#insert").is(":focus")) &&
+            textInput.val().toString().trim() !== "") {
             if (banner_empty.css("display") !== "none") {
                 banner_empty.css({
-                    "top": "55vh",
-                    "filter": "opacity(0)"
+                    top: "55vh",
+                    filter: "opacity(0)",
                 });
                 setTimeout(() => {
                     banner_empty.hide();
@@ -156,10 +177,15 @@ function postTask(content = null, timestamp = null, isImportant = false, id = nu
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "_meta": "post"
+                _meta: "post",
             },
-            body: JSON.stringify({ content: task.content, timestamp: task.timestamp })
-        }).then(res => res.text()).then(res => {
+            body: JSON.stringify({
+                content: task.content,
+                timestamp: task.timestamp,
+            }),
+        })
+            .then((res) => res.text())
+            .then((res) => {
             $(task.element).attr("data-id", res);
         });
     }
@@ -170,8 +196,11 @@ function postTask(content = null, timestamp = null, isImportant = false, id = nu
         if (id)
             $(task.element).attr("data-id", id);
         if (isImportant)
-            $(task.element).addClass("active")
-                .find("button.mark").text("Mark as default").addClass("active");
+            $(task.element)
+                .addClass("active")
+                .find("button.mark")
+                .text("Mark as default")
+                .addClass("active");
     }
     tempTextElements = $(".text-col");
 }

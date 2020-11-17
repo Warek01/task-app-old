@@ -32,43 +32,51 @@ const models = __importStar(require("./models"));
 mongoose_1.default.connect("mongodb://localhost:27017/TODO", {
     useFindAndModify: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 });
 const app = express_1.default(), task_path = path_1.default.join(__dirname, "tasks.json"), task_history_path = path_1.default.join(__dirname, "tasks_history.json");
 let taskDB = JSON.parse(fs_1.default.readFileSync(task_path).toString()) || {};
 nodeArgs();
-app.use(cors_1.default());
+app.use(cors_1.default(), express_1.default.static(__dirname));
 app.set("view engine", "ejs");
 app.set("views", path_1.default.join(__dirname, "views"));
 app.get("/", (req, res, next) => {
     req.redirected = true;
     res.redirect("/login");
 });
-app.route("/users/:userID").get((req, res, next) => {
+app
+    .route("/users/:userName")
+    .get((req, res, next) => {
     try {
-        let userName = req.params.userID.toLowerCase();
+        if (!req.params.userName) {
+            res.redirect("/404");
+            return;
+        }
+        const userName = req.params.userName;
         models.Users.exists({ userName: userName }, async (err, exists) => {
             if (err)
                 throw err;
             if (exists) {
-                let user = (await models.Users.findOne({ userName: userName })).toObject();
+                let user = (await models.Users.findOne({
+                    userName: userName,
+                })).toObject();
                 res.render("index", {
                     tasks: user.tasks,
                     userName: user.userName,
                     newUser: false,
-                    userID: user._id
+                    userID: user._id,
                 });
             }
             else {
                 let usr = new models.Users({
                     userName: userName,
-                    tasks: []
+                    tasks: [],
                 });
                 usr.save();
                 res.render("index", {
                     userName: userName,
                     newUser: true,
-                    userID: usr._id
+                    userID: usr._id,
                 });
             }
         });
@@ -80,41 +88,70 @@ app.route("/users/:userID").get((req, res, next) => {
 })
     .post(express_1.default.json({ strict: true }), (req, res, next) => {
     try {
-        let userID = req.params.userID.toLowerCase(), reqType = req.header("_meta"), tasksHistory = JSON.parse(fs.readFileSync(task_history_path, "utf-8"));
+        let userName = req.params.userName, reqType = req.header("_meta") || "";
         if (reqType === "post") {
-            // Get request body (task)
             let body = req.body;
-            body.important = false;
-            // Push gotten task to local memory tasks array
-            tasksHistory.push(body);
-            taskDB[userID].push(body);
-            // Overwrite static memory file with local memory tasks array
-            /* fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => {}); */
+            models.Users.exists({ userName: userName }, async (err, exists) => {
+                if (err)
+                    throw err;
+                if (exists) {
+                    let user = await models.Users.findOneAndUpdate({ userName: userName }, {
+                        $addToSet: {
+                            tasks: {
+                                content: body.content,
+                                timestamp: Number(body.timestamp),
+                                isImportant: body.important,
+                            },
+                        },
+                    });
+                    res.send(user._id);
+                }
+            });
+            new models.Tasks({
+                content: body.content,
+                timestamp: Number(body.timestamp),
+                isImportant: body.important,
+            }).save();
         }
         else if (reqType === "update") {
-            let body = {
-                index: req.body.index,
-                content: req.body.content
+            const body = {
+                content: req.body.content,
+                id: req.body.id,
             };
-            taskDB[userID][body.index].content = body.content;
-            fs_1.default.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+            models.Users.exists({ userName: userName }, async (err, exists) => {
+                if (err)
+                    throw err;
+                if (exists) {
+                    const user = await models.Users.findOne({
+                        userName: userName,
+                    });
+                    user.tasks.id(body.id).content = body.content;
+                    user.save();
+                    res.sendStatus(200);
+                }
+            });
         }
         else if (reqType === "important") {
             try {
-                const index = req.body.index, taskIsImportant = taskDB[userID][req.body.index].important;
-                if (!taskIsImportant)
-                    taskDB[userID][req.body.index].important = true;
-                else
-                    taskDB[userID][req.body.index].important = false;
+                const taskId = req.body.id;
+                models.Users.exists({ userName: userName }, async (err, exists) => {
+                    if (err)
+                        throw err;
+                    if (exists) {
+                        const user = await models.Users.findOne({
+                            userName: userName,
+                        });
+                        user.tasks.id(taskId).isImportant = !user.tasks.id(taskId).isImportant;
+                        user.save();
+                        res.sendStatus(200);
+                    }
+                });
             }
             catch (error) {
                 serverError(res, error);
                 return;
             }
         }
-        // Overwrite static memory file with local memory tasks array
-        fs.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
-        fs.writeFile(task_history_path, JSON.stringify(tasksHistory, null, 2), () => { });
     }
     catch (error) {
         serverError(res, error);
@@ -123,17 +160,29 @@ app.route("/users/:userID").get((req, res, next) => {
 })
     .delete((req, res, next) => {
     try {
-        let userID = req.params.userID.toLowerCase(), index = Number(req.query.index);
-        taskDB[userID].splice(index, 1);
-        fs_1.default.writeFileSync(task_path, JSON.stringify(taskDB, null, 2));
+        const userName = req.params.userName, taskId = req.query.id.toString() || "";
+        console.log(taskId);
+        models.Users.exists({ userName: userName }, async (err, exists) => {
+            if (err)
+                throw err;
+            if (exists) {
+                const user = await models.Users.findOne({
+                    userName: userName,
+                });
+                user.tasks.id(taskId).remove();
+                user.save();
+                res.sendStatus(200);
+            }
+        });
     }
     catch (error) {
         serverError(res, error);
         return;
     }
-    res.sendStatus(200);
 });
-app.route("/history").get((req, res, next) => {
+app
+    .route("/history")
+    .get((req, res, next) => {
     try {
         fs_1.default.readFile(task_history_path, { encoding: "utf-8" }, (err, data) => {
             res.render("history", { tasks: JSON.parse(data) });
@@ -144,7 +193,8 @@ app.route("/history").get((req, res, next) => {
     catch (error) {
         serverError(res, error);
     }
-}).delete((req, res, next) => {
+})
+    .delete((req, res, next) => {
     try {
         fs_1.default.writeFileSync(task_history_path, "[\n\n]");
     }
@@ -154,17 +204,21 @@ app.route("/history").get((req, res, next) => {
     }
     res.sendStatus(200);
 });
-app.route("/login").get((req, res, next) => {
+app
+    .route("/login")
+    .get((req, res, next) => {
     res.render("login", {});
 });
-app.route("/nouser").get((req, res, next) => {
+app
+    .route("/nouser")
+    .get((req, res, next) => {
     res.sendFile(path_1.default.resolve(__dirname, "../index.html"));
 });
-app.listen(nodeArgs().port, nodeArgs().port_log);
-app.use(express_1.default.static(__dirname));
-app.use((req, res, next) => {
-    res.render("not-found.ejs", { path: req.path });
+app.get("/404", (req, res, next) => {
+    const reqPath = decodeURI((req.query.p || "").toString());
+    res.render("not-found.ejs", { path: reqPath });
 });
+app.listen(nodeArgs().port, nodeArgs().port_log);
 mongoose_1.default.connection.once("open", () => {
     console.log(chalk_1.default.hex("#74b9ff")("Database connected!"));
 });
@@ -182,9 +236,11 @@ function nodeArgs() {
         argv.port = 8000;
     }
     if (argv.r || argv.redirect) {
-        app.get("/users", (req, res, next) => {
+        app
+            .get("/users", (req, res, next) => {
             res.redirect("/login");
-        }).get("/user", (req, res, next) => {
+        })
+            .get("/user", (req, res, next) => {
             res.redirect("/login");
         });
     }
@@ -193,11 +249,18 @@ function nodeArgs() {
     return {
         port: argv.port || argv.p ? argv.port || argv.p : 8000,
         port_log() {
-            console.log('"' + path_1.default.parse(__filename).base + '"' + " is listening to port " + chalk_1.default.hex("#ED4C67")(argv.port || argv.p ? argv.port || argv.p : 8000));
-        }
+            console.log('"' +
+                path_1.default.parse(__filename).base +
+                '"' +
+                " is listening to port " +
+                chalk_1.default.hex("#ED4C67")(argv.port || argv.p ? argv.port || argv.p : 8000));
+        },
     };
 }
 function serverError(res, error) {
     console.error(chalk_1.default.hex("#e74c3c")("Error: "), chalk_1.default.hex("#ff7979")(error));
     res.sendStatus(500);
 }
+app.get("*", (req, res, next) => {
+    res.redirect(`/404?p=${encodeURI(req.path)}`);
+});

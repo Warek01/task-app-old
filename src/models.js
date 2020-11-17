@@ -7,40 +7,42 @@ exports.Users = mongoose_1.model("Users", new mongoose_1.Schema({
     userName: {
         type: String,
         required: true,
-        lowercase: true
+        lowercase: true,
     },
     dateCreated: {
         type: Number,
-        default: Date.now()
+        default: Date.now(),
     },
-    tasks: [{
+    tasks: [
+        {
             content: {
                 type: String,
-                required: true
+                required: true,
             },
             timestamp: {
                 type: Mixed,
-                required: true
+                required: true,
             },
             isImportant: {
                 type: Boolean,
                 required: true,
-                default: false
-            }
-        }]
+                default: false,
+            },
+        },
+    ],
 }), "Users");
 exports.Tasks = mongoose_1.model("Tasks", new mongoose_1.Schema({
     content: {
         type: String,
-        required: true
+        required: true,
     },
     timestamp: {
         type: Mixed,
-        required: true
+        required: true,
     },
     isImportant: {
         type: Boolean,
         required: true,
-        default: false
-    }
+        default: false,
+    },
 }), "Tasks");

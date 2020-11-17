@@ -57,10 +57,8 @@ class Task {
 
     // Task delete logic
     deleteBtn.click(function (event): void {
-      /** Index of given task in main-content */
-      const index: number = Task.getTaskIndex(this.parentElement);
 
-      fetch(`/users/${userID}?index=${index}`, {
+      fetch(`/users/${userID}?id=${$(this).parent(".task").attr("data-id")}`, {
         method: "DELETE",
       }).then((res) => {
         if (res.ok) showModalWindow("ok");
@@ -131,7 +129,7 @@ class Task {
                 _meta: "update",
               },
               body: JSON.stringify({
-                index: index,
+                id: $(this).parent(".task").attr("data-id"),
                 content: $(this).parent().find("p.content").text().trim(),
               }),
             }).then((res) => {
@@ -150,8 +148,7 @@ class Task {
 
     // "Mark as important" button
     markBtn.click(function (event): void {
-      const parent: JQuery = $(this).parent();
-      const index: number = Task.getTaskIndex(this.parentElement);
+      const parent: JQuery = $(this).parent(".task");
 
       // if not important
       parent.css("transition", "background-color 300ms ease");
@@ -173,7 +170,7 @@ class Task {
           "Content-Type": "application/json",
           _meta: "important",
         },
-        body: JSON.stringify({ index: index }),
+        body: JSON.stringify({ id: parent.attr("data-id") }),
       });
     });
 
