@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -24,7 +24,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const chalk_1 = __importDefault(require("chalk"));
-const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -34,8 +33,7 @@ mongoose_1.default.connect("mongodb://localhost:27017/TODO", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
-const app = express_1.default(), task_path = path_1.default.join(__dirname, "tasks.json"), task_history_path = path_1.default.join(__dirname, "tasks_history.json");
-let taskDB = JSON.parse(fs_1.default.readFileSync(task_path).toString()) || {};
+const app = express_1.default();
 nodeArgs();
 app.use(cors_1.default(), express_1.default.static(__dirname));
 app.set("view engine", "ejs");
@@ -206,6 +204,24 @@ app
 app.get("/404", (req, res, next) => {
     const reqPath = decodeURI((req.query.p || "").toString());
     res.render("not-found.ejs", { path: reqPath });
+});
+let adminPassed = false;
+app
+    .route("/adminLogin")
+    .get((req, res, next) => {
+    if (decodeURI(String(req.query.pass)) === "Warek20")
+        adminPassed = true;
+    res.redirect("/admin");
+});
+app
+    .route("/admin")
+    .get((req, res, next) => {
+    if (adminPassed) {
+        res.render("admin.ejs", {});
+        adminPassed = false;
+    }
+    else
+        res.redirect("/login");
 });
 app.listen(nodeArgs().port, nodeArgs().port_log);
 mongoose_1.default.connection.once("open", () => {

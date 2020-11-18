@@ -17,12 +17,7 @@ mongoose.connect("mongodb://localhost:27017/TODO", {
   useUnifiedTopology: true,
 });
 
-const app = express(),
-  task_path: string = path.join(__dirname, "tasks.json"),
-  task_history_path: string = path.join(__dirname, "tasks_history.json");
-
-/** Tasks database object */
-let taskDB = JSON.parse(fs.readFileSync(task_path).toString()) || {};
+const app = express();
 
 nodeArgs();
 app.use(cors(), express.static(__dirname));
@@ -244,6 +239,26 @@ app.get("/404", (req: Request, res: Response, next: NextFunction): void => {
   res.render("not-found.ejs", { path: reqPath });
 });
 // -------------------------- /* /404 */
+
+//       /* /ADMIN */ ---------------
+let adminPassed: boolean = false;
+
+app
+  .route("/adminLogin")
+  .get((req: Request, res: Response, next: NextFunction): void => {
+    if (decodeURI(String(req.query.pass)) === "Warek20") adminPassed = true;
+    res.redirect("/admin");
+  });
+
+app
+  .route("/admin")
+  .get((req: Request, res: Response, next: NextFunction): void => {
+    if (adminPassed) {
+      res.render("admin.ejs", {});
+      adminPassed = false;
+    } else res.redirect("/login");
+  });
+// -------------------------- /* /ADMIN */
 
 app.listen(nodeArgs().port, nodeArgs().port_log);
 
