@@ -78,7 +78,7 @@ class Task {
                 if (Boolean($(this).attr("contenteditable"))) {
                     $(this)
                         .removeAttr("contenteditable")
-                        .css("color", colorSetting.currentTextCol);
+                        .css("color", text_colors[colorSetting.currentText]);
                     // If the task content hasn't changed
                     /* if ($(this).text() !== this.oldContent)
                             return; */
@@ -138,7 +138,7 @@ class Task {
                 body: JSON.stringify({ id: parent.attr("data-id") }),
             });
         });
-        taskContent.css("color", colorSetting.currentTextCol);
+        taskContent.css("color", text_colors[colorSetting.currentText]);
         task.append(taskContent, taskTimestamp, markBtn, editBtn, copyBtn, deleteBtn);
         main_content.append(task);
         this.content = content;

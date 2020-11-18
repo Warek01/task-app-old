@@ -57,7 +57,6 @@ class Task {
 
     // Task delete logic
     deleteBtn.click(function (event): void {
-
       fetch(`/users/${userID}?id=${$(this).parent(".task").attr("data-id")}`, {
         method: "DELETE",
       }).then((res) => {
@@ -111,7 +110,7 @@ class Task {
         if (Boolean($(this).attr("contenteditable"))) {
           $(this)
             .removeAttr("contenteditable")
-            .css("color", colorSetting.currentTextCol);
+            .css("color", text_colors[colorSetting.currentText]);
 
           // If the task content hasn't changed
           /* if ($(this).text() !== this.oldContent)
@@ -174,7 +173,7 @@ class Task {
       });
     });
 
-    taskContent.css("color", colorSetting.currentTextCol);
+    taskContent.css("color", text_colors[colorSetting.currentText]);
     task.append(
       taskContent,
       taskTimestamp,

@@ -65,6 +65,8 @@ app
                     userName: user.userName,
                     newUser: false,
                     userID: user._id,
+                    colorIndex: user.colorIndex,
+                    bgIndex: user.backgroundColorIndex,
                 });
             }
             else {
@@ -76,6 +78,8 @@ app
                 res.render("index", {
                     userName: userName,
                     newUser: true,
+                    colorIndex: 0,
+                    bgIndex: 0,
                     userID: usr._id,
                 });
             }
@@ -88,70 +92,55 @@ app
 })
     .post(express_1.default.json({ strict: true }), (req, res, next) => {
     try {
-        let userName = req.params.userName, reqType = req.header("_meta") || "";
-        if (reqType === "post") {
-            let body = req.body;
-            models.Users.exists({ userName: userName }, async (err, exists) => {
-                if (err)
-                    throw err;
-                if (exists) {
-                    let user = await models.Users.findOneAndUpdate({ userName: userName }, {
-                        $addToSet: {
-                            tasks: {
-                                content: body.content,
-                                timestamp: Number(body.timestamp),
-                                isImportant: body.important,
-                            },
-                        },
+        const userName = req.params.userName, reqType = req.header("_meta") || "";
+        console.log(req.query);
+        models.Users.exists({ userName: userName }, async (err, exists) => {
+            if (err)
+                throw err;
+            if (exists) {
+                let user = await models.Users.findOne({
+                    userName: userName,
+                });
+                if (req.query.color) {
+                    user.colorIndex = Number(req.query.color);
+                    user.save();
+                    return;
+                }
+                else if (req.query.bg) {
+                    user.backgroundColorIndex = Number(req.query.bg);
+                    user.save();
+                    return;
+                }
+                if (reqType === "post") {
+                    let body = req.body;
+                    user.tasks.push({
+                        content: body.content,
+                        timestamp: Number(body.timestamp),
+                        isImportant: body.important,
                     });
+                    new models.Tasks({
+                        content: body.content,
+                        timestamp: Number(body.timestamp),
+                        isImportant: body.important,
+                    }).save();
                     res.send(user._id);
                 }
-            });
-            new models.Tasks({
-                content: body.content,
-                timestamp: Number(body.timestamp),
-                isImportant: body.important,
-            }).save();
-        }
-        else if (reqType === "update") {
-            const body = {
-                content: req.body.content,
-                id: req.body.id,
-            };
-            models.Users.exists({ userName: userName }, async (err, exists) => {
-                if (err)
-                    throw err;
-                if (exists) {
-                    const user = await models.Users.findOne({
-                        userName: userName,
-                    });
+                else if (reqType === "update") {
+                    const body = {
+                        content: req.body.content,
+                        id: req.body.id,
+                    };
                     user.tasks.id(body.id).content = body.content;
-                    user.save();
                     res.sendStatus(200);
                 }
-            });
-        }
-        else if (reqType === "important") {
-            try {
-                const taskId = req.body.id;
-                models.Users.exists({ userName: userName }, async (err, exists) => {
-                    if (err)
-                        throw err;
-                    if (exists) {
-                        const user = await models.Users.findOne({
-                            userName: userName,
-                        });
-                        user.tasks.id(taskId).isImportant = !user.tasks.id(taskId).isImportant;
-                        user.save();
-                        res.sendStatus(200);
-                    }
-                });
+                else if (reqType === "important") {
+                    const taskId = req.body.id;
+                    user.tasks.id(taskId).isImportant = !user.tasks.id(taskId).isImportant;
+                    res.sendStatus(200);
+                }
+                user.save();
             }
-            catch (error) {
-                serverError(res, error);
-                return;
-            }
-        }
+        });
     }
     catch (error) {
         serverError(res, error);
@@ -182,13 +171,10 @@ app
 });
 app
     .route("/history")
-    .get((req, res, next) => {
+    .get(async (req, res, next) => {
     try {
-        fs_1.default.readFile(task_history_path, { encoding: "utf-8" }, (err, data) => {
-            res.render("history", { tasks: JSON.parse(data) });
-            if (err)
-                throw err;
-        });
+        const history = await models.Tasks.find({});
+        res.render("history.ejs", { tasks: history });
     }
     catch (error) {
         serverError(res, error);
@@ -196,7 +182,10 @@ app
 })
     .delete((req, res, next) => {
     try {
-        fs_1.default.writeFileSync(task_history_path, "[\n\n]");
+        models.Tasks.deleteMany({}, (err) => {
+            if (err)
+                throw err;
+        });
     }
     catch (error) {
         serverError(res, error);

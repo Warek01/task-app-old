@@ -12,10 +12,22 @@ export const Users = model(
       required: true,
       lowercase: true,
     },
+
     dateCreated: {
       type: Number,
       default: Date.now(),
     },
+
+    colorIndex: {
+      type: Number,
+      default: 0,
+    },
+
+    backgroundColorIndex: {
+      type: Number,
+      default: 0,
+    },
+
     tasks: [
       {
         content: {
@@ -44,15 +56,17 @@ export const Tasks = model(
       type: String,
       required: true,
     },
+
     timestamp: {
       type: Mixed,
       required: true,
     },
+
     isImportant: {
       type: Boolean,
       required: true,
       default: false,
-    },
+    }
   }),
   "Tasks"
 );

@@ -13,6 +13,14 @@ exports.Users = mongoose_1.model("Users", new mongoose_1.Schema({
         type: Number,
         default: Date.now(),
     },
+    colorIndex: {
+        type: Number,
+        default: 0,
+    },
+    backgroundColorIndex: {
+        type: Number,
+        default: 0,
+    },
     tasks: [
         {
             content: {
@@ -44,5 +52,5 @@ exports.Tasks = mongoose_1.model("Tasks", new mongoose_1.Schema({
         type: Boolean,
         required: true,
         default: false,
-    },
+    }
 }), "Tasks");

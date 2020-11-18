@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import * as models from "./models";
 import process from "process";
 
-type Document = mongoose.Document | null;
+type Document = mongoose.Document | mongoose.Document[] | null;
 
 // Connecting to MongoDB
 mongoose.connect("mongodb://localhost:27017/TODO", {
@@ -51,6 +51,7 @@ app
         async (err: Error, exists: boolean): Promise<any> => {
           if (err) throw err;
           if (exists) {
+            // Get user object
             let user: any = (await models.Users.findOne({
               userName: userName,
             }))!.toObject();
@@ -60,6 +61,8 @@ app
               userName: user.userName,
               newUser: false,
               userID: user._id,
+              colorIndex: user.colorIndex,
+              bgIndex: user.backgroundColorIndex,
             });
           } else {
             let usr: mongoose.Document = new models.Users({
@@ -72,6 +75,8 @@ app
             res.render("index", {
               userName: userName,
               newUser: true,
+              colorIndex: 0,
+              bgIndex: 0,
               userID: usr._id,
             });
           }
@@ -82,100 +87,78 @@ app
       return;
     }
   })
-  // Task post request
+  // Task posts/updates request
   .post(
     express.json({ strict: true }),
     (req: Request, res: Response, next: NextFunction): void => {
       try {
-        let userName: string = req.params.userName,
+        const userName: string = req.params.userName,
           reqType: string = req.header("_meta") || "";
+        console.log(req.query);
 
-        if (reqType === "post") {
-          // Get request body (task)
-          let body: any = req.body;
+        models.Users.exists(
+          { userName: userName },
+          async (err: Error, exists: boolean): Promise<any> => {
+            if (err) throw err;
+            if (exists) {
+              let user: Document = await models.Users.findOne({
+                userName: userName,
+              });
 
-          models.Users.exists(
-            { userName: userName },
-            async (err: Error, exists: boolean): Promise<any> => {
-              if (err) throw err;
-              if (exists) {
-                let user: Document = await models.Users.findOneAndUpdate(
-                  { userName: userName },
-                  {
-                    // Append given task to tasks array
-                    $addToSet: {
-                      tasks: {
-                        content: body.content,
-                        timestamp: Number(body.timestamp),
-                        isImportant: body.important,
-                      },
-                    },
-                  }
-                );
+              if (req.query.color) {
+                (user as any).colorIndex = Number(req.query.color);
+                user!.save();
+                return;
+              } else if (req.query.bg) {
+                (user as any).backgroundColorIndex = Number(req.query.bg);
+                user!.save();
+                return;
+              }
+
+              // Post task
+              if (reqType === "post") {
+                let body: any = req.body;
+
+                (user as any).tasks.push({
+                  content: body.content,
+                  timestamp: Number(body.timestamp),
+                  isImportant: body.important,
+                });
+
+                // Append new task to tasks history collection
+                new models.Tasks({
+                  content: body.content,
+                  timestamp: Number(body.timestamp),
+                  isImportant: body.important,
+                }).save();
 
                 res.send(user!._id);
               }
-            }
-          );
+              // Task content update logic
+              else if (reqType === "update") {
+                const body: any = {
+                  content: req.body.content,
+                  id: req.body.id,
+                };
 
-          // Append new task to tasks history collection
-          new models.Tasks({
-            content: body.content,
-            timestamp: Number(body.timestamp),
-            isImportant: body.important,
-          }).save();
-        }
-
-        // Task content update logic
-        else if (reqType === "update") {
-          const body: any = {
-            content: req.body.content,
-            id: req.body.id,
-          };
-
-          models.Users.exists(
-            { userName: userName },
-            async (err: Error, exists: boolean): Promise<any> => {
-              if (err) throw err;
-              if (exists) {
-                const user: Document = await models.Users.findOne({
-                  userName: userName,
-                });
                 (user as any).tasks.id(body.id).content = body.content;
-                user!.save();
                 res.sendStatus(200);
               }
-            }
-          );
-        }
+              // Make a task importand/default
+              else if (reqType === "important") {
+                const taskId: string = req.body.id;
 
-        // Make a task importand/default
-        else if (reqType === "important") {
-          try {
-            const taskId: string = req.body.id;
-            models.Users.exists(
-              { userName: userName },
-              async (err: Error, exists: boolean): Promise<any> => {
-                if (err) throw err;
-                if (exists) {
-                  const user: Document = await models.Users.findOne({
-                    userName: userName,
-                  });
+                (user as any).tasks.id(
+                  taskId
+                ).isImportant = !(user as any).tasks.id(taskId).isImportant;
 
-                  (user as any).tasks.id(
-                    taskId
-                  ).isImportant = !(user as any).tasks.id(taskId).isImportant;
-
-                  user!.save();
-                  res.sendStatus(200);
-                }
+                res.sendStatus(200);
               }
-            );
-          } catch (error) {
-            serverError(res, error);
-            return;
+
+              user!.save();
+            }
           }
-        }
+        );
       } catch (error) {
         serverError(res, error);
         return;
@@ -215,19 +198,21 @@ app
 //       /* /HISTORY */ ---------------
 app
   .route("/history")
-  .get((req: Request, res: Response, next: NextFunction): void => {
-    try {
-      fs.readFile(task_history_path, { encoding: "utf-8" }, (err, data) => {
-        res.render("history", { tasks: JSON.parse(data) });
-        if (err) throw err;
-      });
-    } catch (error) {
-      serverError(res, error);
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+      try {
+        const history: Document = await models.Tasks.find({});
+        res.render("history.ejs", { tasks: history });
+      } catch (error) {
+        serverError(res, error);
+      }
     }
-  })
+  )
   .delete((req: Request, res: Response, next: NextFunction): void => {
     try {
-      fs.writeFileSync(task_history_path, "[\n\n]");
+      models.Tasks.deleteMany({}, (err: Error): void => {
+        if (err) throw err;
+      });
     } catch (error) {
       serverError(res, error);
       return;

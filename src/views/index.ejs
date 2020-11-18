@@ -98,7 +98,9 @@
     <script>
         const userID = "<%= userName %>";
         const newUser = "<%= newUser %>" === "true";
-        console.log("<%= userID %>")
+        const SvColor = Number("<%= colorIndex %>");
+        const SvBgColor = Number("<%= bgIndex %>");
+        console.log("userid: <%= userID %>");
     </script>
 
     <% if (locals.tasks && locals.tasks.length > 0) { %>
