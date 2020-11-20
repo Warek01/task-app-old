@@ -7,7 +7,7 @@ body {
   background-color: #bdc3c7;
   font-size: 16px;
   animation: bg 10s infinite;
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
 
 *::selection {
@@ -52,25 +52,15 @@ body {
   color: #fff;
   padding: 10px 0;
   margin: 0 auto;
+  margin-top: 30px;
   cursor: pointer;
   text-transform: uppercase;
-  margin-top: 30px;
   transition: all 200ms ease;
 }
 .wrapper .login button:hover {
   background-color: dodgerblue;
 }
 .wrapper .login button:focus {
-  outline: none;
-}
-.wrapper .login input {
-  position: relative;
-  display: block;
-  margin: 0 auto;
-  width: 275px;
-  height: 20px;
-}
-.wrapper .login input:focus {
   outline: none;
 }
 .wrapper .login .img-wrap {
@@ -88,4 +78,15 @@ body {
 .wrapper .login .img-wrap img {
   position: relative;
   bottom: 5px;
+}
+
+input {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  width: 275px;
+  height: 20px;
+}
+input:focus {
+  outline: none;
 }

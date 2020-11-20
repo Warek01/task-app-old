@@ -41,6 +41,8 @@ app
 
       const userName: string = req.params.userName;
 
+      if (userName === "admin") res.redirect("/admin");
+
       models.Users.exists(
         { userName: userName },
         async (err: Error, exists: boolean): Promise<any> => {
@@ -241,22 +243,12 @@ app.get("/404", (req: Request, res: Response, next: NextFunction): void => {
 // -------------------------- /* /404 */
 
 //       /* /ADMIN */ ---------------
-let adminPassed: boolean = false;
-
-app
-  .route("/adminLogin")
-  .get((req: Request, res: Response, next: NextFunction): void => {
-    if (decodeURI(String(req.query.pass)) === "Warek20") adminPassed = true;
-    res.redirect("/admin");
-  });
-
 app
   .route("/admin")
-  .get((req: Request, res: Response, next: NextFunction): void => {
-    if (adminPassed) {
-      res.render("admin.ejs", {});
-      adminPassed = false;
-    } else res.redirect("/login");
+  .get(async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    res.render("admin.ejs", {
+
+    });
   });
 // -------------------------- /* /ADMIN */
 
@@ -302,33 +294,25 @@ function nodeArgs(this: any): { port: string; port_log(): void } {
     argv.port = 8000;
   }
 
-  if (argv.r || argv.redirect) {
-    app
-      .get(
-        "/users",
-        (req: Request, res: Response, next: NextFunction): void => {
-          res.redirect("/login");
-        }
-      )
-      .get("/user", (req: Request, res: Response, next: NextFunction): void => {
+  if (argv.r || argv.redirect) app
+    .get(
+      "/users",
+      (req: Request, res: Response, next: NextFunction): void => {
         res.redirect("/login");
-      });
-  }
+      }
+    )
+    .get("/user", (req: Request, res: Response, next: NextFunction): void => {
+      res.redirect("/login");
+    });
 
   // -l or --log
   if (argv.l || argv.log) app.use(log);
 
   // -p [port] or --port [port]
   return {
-    port: argv.port || argv.p ? argv.port || argv.p : 8000,
+    port: argv.port || argv.p || 8000,
     port_log(): void {
-      console.log(
-        '"' +
-          path.parse(__filename).base +
-          '"' +
-          " is listening to port " +
-          chalk.hex("#ED4C67")(argv.port || argv.p ? argv.port || argv.p : 8000)
-      );
+      console.log(`"${path.parse(__filename).base}" is listening to port ${chalk.hex("#ED4C67")(argv.port || argv.p || 8000)}`);
     },
   };
 }

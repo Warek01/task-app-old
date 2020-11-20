@@ -9,17 +9,17 @@ const body: JQuery = $("body")!,
   inputCopy: JQuery = $("#input-copy")!;
 
 const bg_colors: string[] = [
-    "#bdc3c7",
-    "#1abc9c",
-    "#27ae60",
-    "#2980b9",
-    "#8e44ad",
-    "#2c3e50",
-    "#f39c12",
-    "#d35400",
-    "#c0392b",
-    "#7f8c8d",
-  ],
+  "#bdc3c7",
+  "#1abc9c",
+  "#27ae60",
+  "#2980b9",
+  "#8e44ad",
+  "#2c3e50",
+  "#f39c12",
+  "#d35400",
+  "#c0392b",
+  "#7f8c8d",
+],
   text_colors: string[] = [
     "#fff",
     "#1B1464",
@@ -59,15 +59,15 @@ if (
   SvColor <= text_colors.length &&
   SvBgColor <= bg_colors.length
 ) {
-   // Change text color to the server one
-   colorSetting.currentText = SvColor;
-   tempTextElements.css("color", text_colors[colorSetting.currentText]);
-   $("#textcol").css("background-color", text_colors[colorSetting.currentText]);
-   // And background ones
-   colorSetting.currentBg = SvBgColor;
-   body.css("background-color", bg_colors[colorSetting.currentBg]);
-   $(".circle-bgc").css("background-color", bg_colors[colorSetting.currentBg]);
-   $("#bgcol").css("background-color", bg_colors[colorSetting.currentBg]);
+  // Change text color to the server one
+  colorSetting.currentText = SvColor;
+  tempTextElements.css("color", text_colors[colorSetting.currentText]);
+  $("#textcol").css("background-color", text_colors[colorSetting.currentText]);
+  // And background ones
+  colorSetting.currentBg = SvBgColor;
+  body.css("background-color", bg_colors[colorSetting.currentBg]);
+  $(".circle-bgc").css("background-color", bg_colors[colorSetting.currentBg]);
+  $("#bgcol").css("background-color", bg_colors[colorSetting.currentBg]);
 }
 
 // Help banner toggler
@@ -90,9 +90,9 @@ options.find(".bgc").click(function (event): void {
   $("#bgcol").css("background-color", bg_colors[colorSetting.currentBg]);
 
   fetch(`/users/${userID}?bg=${colorSetting.currentBg}`, {
-   method: "POST",
-   body: ""
-});
+    method: "POST",
+    body: ""
+  });
 });
 
 // Text color change button
@@ -108,8 +108,8 @@ options.find(".textc").click(function (event): void {
   $("#textcol").css("background-color", text_colors[colorSetting.currentText]);
 
   fetch(`/users/${userID}?color=${colorSetting.currentText}`, {
-     method: "POST",
-     body: ""
+    method: "POST",
+    body: ""
   });
 });
 

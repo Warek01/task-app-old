@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -51,6 +51,8 @@ app
             return;
         }
         const userName = req.params.userName;
+        if (userName === "admin")
+            res.redirect("/admin");
         models.Users.exists({ userName: userName }, async (err, exists) => {
             if (err)
                 throw err;
@@ -205,23 +207,10 @@ app.get("/404", (req, res, next) => {
     const reqPath = decodeURI((req.query.p || "").toString());
     res.render("not-found.ejs", { path: reqPath });
 });
-let adminPassed = false;
-app
-    .route("/adminLogin")
-    .get((req, res, next) => {
-    if (decodeURI(String(req.query.pass)) === "Warek20")
-        adminPassed = true;
-    res.redirect("/admin");
-});
 app
     .route("/admin")
-    .get((req, res, next) => {
-    if (adminPassed) {
-        res.render("admin.ejs", {});
-        adminPassed = false;
-    }
-    else
-        res.redirect("/login");
+    .get(async (req, res, next) => {
+    res.render("admin.ejs", {});
 });
 app.listen(nodeArgs().port, nodeArgs().port_log);
 mongoose_1.default.connection.once("open", () => {
@@ -240,7 +229,7 @@ function nodeArgs() {
         argv.log = true;
         argv.port = 8000;
     }
-    if (argv.r || argv.redirect) {
+    if (argv.r || argv.redirect)
         app
             .get("/users", (req, res, next) => {
             res.redirect("/login");
@@ -248,17 +237,12 @@ function nodeArgs() {
             .get("/user", (req, res, next) => {
             res.redirect("/login");
         });
-    }
     if (argv.l || argv.log)
         app.use(log);
     return {
-        port: argv.port || argv.p ? argv.port || argv.p : 8000,
+        port: argv.port || argv.p || 8000,
         port_log() {
-            console.log('"' +
-                path_1.default.parse(__filename).base +
-                '"' +
-                " is listening to port " +
-                chalk_1.default.hex("#ED4C67")(argv.port || argv.p ? argv.port || argv.p : 8000));
+            console.log(`"${path_1.default.parse(__filename).base}" is listening to port ${chalk_1.default.hex("#ED4C67")(argv.port || argv.p || 8000)}`);
         },
     };
 }

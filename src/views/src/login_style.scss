@@ -58,26 +58,14 @@ body {
       color: #fff;
       padding: 10px 0;
       margin: 0 auto;
+      margin-top: 30px;
       cursor: pointer;
       text-transform: uppercase;
-      margin-top: 30px;
       transition: all 200ms ease;
 
       &:hover {
         background-color: rgba(#1e90ff, 1);
       }
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    input {
-      position: relative;
-      display: block;
-      margin: 0 auto;
-      width: 275px;
-      height: 20px;
 
       &:focus {
         outline: none;
@@ -101,5 +89,17 @@ body {
         bottom: 5px;
       }
     }
+  }
+}
+
+input {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  width: 275px;
+  height: 20px;
+
+  &:focus {
+    outline: none;
   }
 }
