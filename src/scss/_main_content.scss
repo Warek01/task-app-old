@@ -9,7 +9,7 @@
     position: relative;
     display: block;
     width: 100%;
-    height: 75px;
+    min-height: 75px;
     padding-top: 5px;
     margin-top: 15px;
     box-sizing: content-box;
@@ -29,16 +29,21 @@
       }
 
       .content {
-        height: 40px;
-        font-size: 1.35em;
+        min-height: 40px;
+        font-size: 1.2em;
 
         &::after {
+          // top: 90%;
+          bottom: -10px;
           width: 98%;
           background-color: rgba(#2f3542, 0.35);
         }
       }
 
-      .timestamp,
+      .timestamp {
+        top: 10px;
+      }
+
       button {
         top: 10px;
       }
@@ -54,10 +59,12 @@
     .content {
       position: relative;
       display: block;
-      width: 100%;
-      height: 30px;
+      width: 95%;
+      // height: 30px;
+      min-height: 30px;
       margin-left: 1.25%;
       top: 0;
+      word-break: break-word;
 
       &:focus {
         outline: none;
@@ -71,66 +78,53 @@
         width: 20%;
         height: 1px;
         background-color: rgba(#2f3542, 0.1);
+      }
 
-        .timestamp {
-          position: relative;
-          display: inline-block;
-          height: 30px;
-          width: 230px;
-          top: 0;
-          margin-top: 7px;
-          margin-left: 1%;
-          word-spacing: 2px;
-          letter-spacing: 1px;
-          color: #eee;
+      p {
+        display: inline-block;
+        position: relative;
+        font-size: 18px;
+        margin-left: 1.5%;
+      }
+    }
 
-          transition: all 300ms ease;
-        }
+    .timestamp {
+      position: relative;
+      display: inline-block;
+      height: 30px;
+      width: 230px;
+      margin-top: 20px;
+      margin-left: .75%;
+      font-family: "Montserrat";
+      font-weight: 300;
+      font-size: .8em;
+      word-spacing: 2px;
+      letter-spacing: 0px;
+      color: #eee;
 
-        .timestamp {
-          position: relative;
-          display: inline-block;
-          height: 30px;
-          width: 230px;
-          top: 0;
-          margin-top: 7px;
-          margin-left: 1%;
-          word-spacing: 2px;
-          letter-spacing: 1px;
-          color: #eee;
+      transition: all 0.3s ease;
+    }
 
-          transition: all 0.3s ease;
-        }
+    button {
+      position: relative;
+      top: -5px;
+      padding: 5px 8px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      background-color: #1e90ff;
 
-        p {
-          display: inline-block;
-          position: relative;
-          font-size: 18px;
-          margin-left: 1.5%;
-        }
+      transition: all 0.3s ease;
 
-        button {
-          position: relative;
-          top: 0;
-          padding: 5px 8px;
-          border-radius: 5px;
-          border: none;
-          cursor: pointer;
-          color: #fff;
-          background-color: #1e90ff;
-
-          transition: all 0.3s ease;
-
-          &:focus {
-            outline: none;
-          }
-          &:not(:first-of-type) {
-            margin-left: 10px;
-          }
-          &.active {
-            background-color: gray;
-          }
-        }
+      &:focus {
+        outline: none;
+      }
+      &:not(:first-of-type) {
+        margin-left: 10px;
+      }
+      &.active {
+        background-color: gray;
       }
     }
   }

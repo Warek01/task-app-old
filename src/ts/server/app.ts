@@ -294,16 +294,11 @@ function nodeArgs(this: any): { port: string; port_log(): void } {
     argv.port = 8000;
   }
 
-  if (argv.r || argv.redirect) app
-    .get(
-      "/users",
-      (req: Request, res: Response, next: NextFunction): void => {
+  if (argv.r || argv.redirect)
+    for (const path of ["/user", "/users", "/user/", "/users/"])
+      app.get(path, (req: Request, res: Response, next: NextFunction): void => {
         res.redirect("/login");
-      }
-    )
-    .get("/user", (req: Request, res: Response, next: NextFunction): void => {
-      res.redirect("/login");
-    });
+      });
 
   // -l or --log
   if (argv.l || argv.log) app.use(log);

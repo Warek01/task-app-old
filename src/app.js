@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -230,13 +230,10 @@ function nodeArgs() {
         argv.port = 8000;
     }
     if (argv.r || argv.redirect)
-        app
-            .get("/users", (req, res, next) => {
-            res.redirect("/login");
-        })
-            .get("/user", (req, res, next) => {
-            res.redirect("/login");
-        });
+        for (const path of ["/user", "/users", "/user/", "/users/"])
+            app.get(path, (req, res, next) => {
+                res.redirect("/login");
+            });
     if (argv.l || argv.log)
         app.use(log);
     return {

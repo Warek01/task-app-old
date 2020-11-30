@@ -2,6 +2,8 @@
 /* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
 /* font-family: 'Open Sans', sans-serif; -Content- */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300&display=swap");
+/* font-family: 'Montserrat', sans-serif; Extra light 200, light 300 */
 @font-face {
   font-family: "Fira Code";
   src: url("fonts/subset-FiraCode-Regular.eot");
@@ -24,9 +26,22 @@ body {
   background-color: #74b9ff;
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
+  animation: bg 15s infinite;
 }
 
+@keyframes bg {
+  0% {
+    background-color: #74b9ff;
+  }
+  50% {
+    background-color: #48dbfb;
+  }
+  100% {
+    background-color: #74b9ff;
+  }
+}
 nav {
+  position: relative;
   width: calc(15% - 1px);
   height: 100vh;
   float: left;
@@ -36,9 +51,9 @@ nav {
 }
 nav .wrapper {
   position: relative;
-  width: 90%;
-  margin-left: 5%;
-  margin-top: 5%;
+  width: 85%;
+  margin-left: 7.5%;
+  margin-top: 10vh;
   display: grid;
   grid-auto-rows: 100px;
   grid-template-columns: 1fr;
@@ -55,6 +70,11 @@ nav .wrapper button {
   border: none;
   background-color: rgba(0, 0, 0, 0.05);
   color: #fff;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 300;
+  font-family: "Montserrat", sans-serif;
   transition: background-color 200ms ease;
 }
 nav .wrapper button.active {
@@ -67,24 +87,40 @@ nav .wrapper button:focus {
   outline: none;
 }
 nav p.logo {
-  color: #fff;
+  position: relative;
   display: flex;
+  height: 15%;
   align-items: center;
   justify-content: center;
-  font-size: 2em;
-  height: 40px;
+  font-size: 2.2em;
+  color: #fff;
   cursor: default;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 200;
 }
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1500px) {
   nav p.logo {
-    font-size: 1.5em;
+    font-size: 1.8em;
+  }
+}
+@media screen and (max-width: 1250px) {
+  nav p.logo {
+    font-size: 1.4em;
   }
 }
 
 .content-wrapper {
-  display: block;
+  display: flex;
   position: relative;
   width: 85%;
   height: 100vh;
   float: right;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+.content-wrapper #content {
+  position: relative;
+  width: 98.5%;
+  height: 98.5%;
 }
