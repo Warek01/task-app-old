@@ -41,7 +41,8 @@ app
 
       const userName: string = req.params.userName;
 
-      if (userName === "admin") res.redirect("/admin");
+      // Admin page (work in process)
+      // if (userName === "admin") res.redirect("/admin");
 
       models.Users.exists(
         { userName: userName },
