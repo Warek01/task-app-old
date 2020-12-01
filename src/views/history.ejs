@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="shortcut icon" href="./img/icon.ico" type="image/x-icon">
-   <link rel="stylesheet" href="./views/sources/history_style.css">
+   <link rel="stylesheet" href="./views/src/history_style.css">
    <title>History of all tasks</title>
 </head>
+
 <body>
 
    <div class="modal">
@@ -34,7 +36,7 @@
    </div>
 
    <script src="./jquery.js"></script>
-   <script src="./views/sources/history_script.js"></script>
+   <script src="./views/src/history_script.js"></script>
 
    <% if (locals.tasks.length > 0) { %> 
       <% for (let task of tasks) { %> 
@@ -44,4 +46,5 @@
       <% } %> 
    <% } %> 
 </body>
+
 </html>

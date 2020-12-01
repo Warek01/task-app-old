@@ -1,166 +1,164 @@
 header {
-    display: block;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #485460;
+  border-bottom: 3px solid #2f3542;
+
+  .logo-img {
     position: relative;
-    width: 100%;
-    height: 80px;
-    background-color: #485460;
-    border-bottom: 3px solid #2f3542;
-
-    .logo-img {
-        position: relative;
-        margin-left: 20px;
-        float: left;
-        height: 100%;
-        width: 100px;
-
-        .logo {
-            position: absolute;
-            top: 7px;
-            margin-left: 5px;
-            width: 80px;
-            height: 80px;
-            background-image: url(img/logo.png);
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-        }
-    }
+    margin-left: 20px;
+    float: left;
+    height: 100%;
+    width: 100px;
 
     .logo {
-        position: relative;
-        float: left;
-        margin-left: 10px;
-        color: #fff;
-        font-size: 88px;
-        text-transform: uppercase;
-        font-family: 'Baloo Tamma 2', cursive;
-        font-weight: bold;
-        line-height: 1.15;
-        cursor: default;
+      position: absolute;
+      top: 7px;
+      margin-left: 5px;
+      width: 80px;
+      height: 80px;
+      background-image: url(img/logo.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
     }
+  }
 
-    #options {
-        display: flex;
-        position: relative;
-        align-items: center;
-        justify-content: center;
-        float: right;
-        width: 20%;
-        height: 100%;
-        margin-right: 80px;
-        user-select: none;
+  .logo {
+    position: relative;
+    float: left;
+    margin-left: 10px;
+    color: #fff;
+    font-size: 88px;
+    text-transform: uppercase;
+    font-family: "Baloo Tamma 2", cursive;
+    font-weight: bold;
+    line-height: 1.15;
+    cursor: default;
+  }
 
-        button {
-            width: 120px;
+  #options {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    width: 20%;
+    height: 100%;
+    margin-right: 80px;
+    user-select: none;
+
+    button {
+      width: 120px;
+      height: 50px;
+      text-transform: uppercase;
+      cursor: pointer;
+      background-color: #0a3d62;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-weight: 600;
+      transition: background-color 0.3s ease, box-shadow 1s ease;
+
+      &:hover {
+        background-color: lighten(#0a3d62, 15);
+        box-shadow: 0 0 40px #1e90ff, 0 0 80px #1e90ff;
+      }
+
+      &:hover ul.content {
+        height: 282px;
+        width: 160px;
+        margin-left: -20px;
+      }
+
+      ul.content {
+        position: absolute;
+        margin-top: 15px;
+        height: 0;
+        width: 120px;
+        z-index: 999;
+        background-color: #0a3d62;
+        font-size: 14px;
+        text-align: center;
+        overflow: hidden;
+        transition: all 0.5s ease;
+        font-weight: normal;
+        box-sizing: border-box;
+
+        li {
+          position: relative;
+          list-style: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: lighten(#0a3d62, 10);
+          }
+
+          &:nth-of-type(1) {
+            height: 40px;
+            border-bottom: 2px solid black;
+            border-top: 2px solid black;
+          }
+
+          &:nth-of-type(2) {
+            height: 80px;
+            border-bottom: 2px solid black;
+          }
+
+          &:nth-of-type(3) {
             height: 50px;
-            text-transform: uppercase;
-            cursor: pointer;
-            background-color: #0a3d62;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            letter-spacing: 1px;
-            font-weight: 600;
-            transition: background-color .3s ease, box-shadow 1s ease;
+            border-bottom: 2px solid black;
+          }
 
-            &:hover {
-                background-color: lighten(#0a3d62, 15);
-                box-shadow: 0 0 40px #1e90ff, 0 0 80px #1e90ff;
-            }
+          &:nth-of-type(4) {
+            height: 50px;
+            border-bottom: 2px solid black;
+          }
+          &:nth-of-type(5) {
+            height: 50px;
+            border-bottom: 2px solid black;
+          }
 
-            &:hover ul.content {
-                height: 282px;
-                width: 160px;
-                margin-left: -20px;
-            }
+          #bgcol {
+            display: block;
+            width: 18px;
+            min-width: 18px;
+            height: 12px;
+            min-height: 12px;
+            overflow: visible;
+            position: relative;
+            margin-top: 35px;
+            left: -30px;
+            background-color: #d1d8e0;
+          }
 
-            ul.content {
-                position: absolute;
-                margin-top: 15px;
-                height: 0;
-                width: 120px;
-                z-index: 999;
-                background-color: #0a3d62;
-                font-size: 14px;
-                text-align: center;
-                overflow: hidden;
-                transition: all .5s ease;
-                font-weight: normal;
-                box-sizing: border-box;
-
-                li {
-                    position: relative;
-                    list-style: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    &:hover {
-                        background-color: lighten(#0a3d62, 10);
-                    }
-
-                    &:nth-of-type(1) {
-                        height: 40px;
-                        border-bottom: 2px solid black;
-                        border-top: 2px solid black;
-                    }
-
-                    &:nth-of-type(2) {
-                        height: 80px;
-                        border-bottom: 2px solid black;
-                    }
-
-                    &:nth-of-type(3) {
-                        height: 50px;
-                        border-bottom: 2px solid black;
-                    }
-
-                    &:nth-of-type(4) {
-                        height: 50px;
-                        border-bottom: 2px solid black;
-                    }
-                    &:nth-of-type(5) {
-                        height: 50px;
-                        border-bottom: 2px solid black;
-                    }
-
-                    #bgcol {
-                        display: block;
-                        width: 18px;
-                        min-width: 18px;
-                        height: 12px;
-                        min-height: 12px;
-                        overflow: visible;
-                        position: relative;
-                        margin-top: 35px;
-                        left: -30px;
-                        background-color: #d1d8e0;
-                    }
-
-                    #textcol {
-                        display: block;
-                        width: 18px;
-                        min-width: 18px;
-                        height: 12px;
-                        min-height: 12px;
-                        overflow: visible;
-                        position: relative;
-                        margin-top: 20px;
-                        left: -30px;
-                        background-color: white;
-                    }
-                }
-
-            }
-
-            &:focus {
-                outline: none;
-            }
+          #textcol {
+            display: block;
+            width: 18px;
+            min-width: 18px;
+            height: 12px;
+            min-height: 12px;
+            overflow: visible;
+            position: relative;
+            margin-top: 20px;
+            left: -30px;
+            background-color: white;
+          }
         }
+      }
 
-        &:focus {
-            outline: none;
-        }
+      &:focus {
+        outline: none;
+      }
     }
 
+    &:focus {
+      outline: none;
+    }
+  }
 }

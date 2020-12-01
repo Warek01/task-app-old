@@ -1,28 +1,51 @@
 "use strict";
 const body = $("body"), options = $("#options"), banner_help = $("#banner_help"), banner_empty = $("#banner-empty"), main_content = $(".main-content"), modal = $(".modal"), inputDiv = $("#input"), inputElement = inputDiv.find("input"), inputCopy = $("#input-copy");
-const bg_colors = ["#1abc9c", "#27ae60", "#2980b9", "#8e44ad",
-    "#2c3e50", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"], text_colors = ["#1B1464", "#6F1E51", "#353b48", "#2bcbba", "#26de81", "#f7d794"];
+const bg_colors = [
+    "#bdc3c7",
+    "#1abc9c",
+    "#27ae60",
+    "#2980b9",
+    "#8e44ad",
+    "#2c3e50",
+    "#f39c12",
+    "#d35400",
+    "#c0392b",
+    "#7f8c8d",
+], text_colors = [
+    "#fff",
+    "#1B1464",
+    "#6F1E51",
+    "#353b48",
+    "#2bcbba",
+    "#26de81",
+    "#f7d794",
+];
 let tempTextElements = $(".text-col"), colorSetting = {
-    originalBg: body.css("background-color"),
-    currentBg: body.css("background-color"),
-    bgIndex: 0,
-    originalTextCol: tempTextElements.eq(0).css("color"),
-    currentTextCol: tempTextElements.eq(0).css("color"),
-    textIndex: 0,
+    currentText: 0,
+    currentBg: 0,
     reset() {
-        body.css("background-color", this.originalBg);
-        tempTextElements.css("color", this.originalTextCol);
-        $("#textcol").css("background-color", this.originalTextCol);
-        $("#bgcol").css("background-color", this.originalBg);
-        $(".circle-bgc").css("background-color", this.originalBg);
-        this.currentBg = this.originalBg;
-        this.currentTextCol = this.originalTextCol;
-        this.bgIndex = 0;
-        this.textIndex = 0;
-    }
+        this.currentBg = bg_colors.length - 1;
+        this.currentText = text_colors.length - 1;
+        options.find(".bgc").trigger("click");
+        options.find(".textc").trigger("click");
+    },
 };
 if (newUser)
     showModalWindow("info", "Welcome!");
+if (SvColor > 0 &&
+    SvBgColor > 0 &&
+    SvColor <= text_colors.length &&
+    SvBgColor <= bg_colors.length) {
+    // Change text color to the server one
+    colorSetting.currentText = SvColor;
+    tempTextElements.css("color", text_colors[colorSetting.currentText]);
+    $("#textcol").css("background-color", text_colors[colorSetting.currentText]);
+    // And background ones
+    colorSetting.currentBg = SvBgColor;
+    body.css("background-color", bg_colors[colorSetting.currentBg]);
+    $(".circle-bgc").css("background-color", bg_colors[colorSetting.currentBg]);
+    $("#bgcol").css("background-color", bg_colors[colorSetting.currentBg]);
+}
 // Help banner toggler
 options.find(".help").click(function (event) {
     if (banner_help.css("display") === "none")
@@ -31,46 +54,36 @@ options.find(".help").click(function (event) {
 });
 // Background color change button
 options.find(".bgc").click(function (event) {
-    if (colorSetting.currentBg === colorSetting.originalBg) {
+    if (colorSetting.currentBg === bg_colors.length - 1) {
         body.css("background-color", bg_colors[0]);
-        colorSetting.currentBg = bg_colors[0];
+        colorSetting.currentBg = 0;
     }
-    else if (bg_colors.has(colorSetting.currentBg)) {
-        if (colorSetting.currentBg === bg_colors[bg_colors.length - 1]) {
-            body.css("background-color", colorSetting.originalBg);
-            colorSetting.bgIndex = 0;
-            colorSetting.currentBg = colorSetting.originalBg;
-            $("#bgcol").css("background-color", colorSetting.currentBg);
-            $(".circle-bgc").css("background-color", colorSetting.currentBg);
-            return;
-        }
-        colorSetting.bgIndex++;
-        body.css("background-color", bg_colors[colorSetting.bgIndex]);
-        colorSetting.currentBg = bg_colors[colorSetting.bgIndex];
-        $(".circle-bgc").css("background-color", bg_colors[colorSetting.bgIndex]);
+    else {
+        colorSetting.currentBg++;
+        body.css("background-color", bg_colors[colorSetting.currentBg]);
     }
-    $(".circle-bgc").css("background-color", colorSetting.currentBg);
-    $("#bgcol").css("background-color", colorSetting.currentBg);
+    $(".circle-bgc").css("background-color", bg_colors[colorSetting.currentBg]);
+    $("#bgcol").css("background-color", bg_colors[colorSetting.currentBg]);
+    fetch(`/users/${userID}?bg=${colorSetting.currentBg}`, {
+        method: "POST",
+        body: ""
+    });
 });
 // Text color change button
 options.find(".textc").click(function (event) {
-    if (colorSetting.currentTextCol === colorSetting.originalTextCol) {
+    if (colorSetting.currentText === text_colors.length - 1) {
         tempTextElements.css("color", text_colors[0]);
-        colorSetting.currentTextCol = text_colors[0];
+        colorSetting.currentText = 0;
     }
-    else if (text_colors.has(colorSetting.currentTextCol)) {
-        if (colorSetting.currentTextCol === text_colors[text_colors.length - 1]) {
-            tempTextElements.css("color", colorSetting.originalTextCol);
-            colorSetting.textIndex = 0;
-            colorSetting.currentTextCol = colorSetting.originalTextCol;
-            $("#textcol").css("background-color", colorSetting.currentTextCol);
-            return;
-        }
-        colorSetting.textIndex++;
-        tempTextElements.css("color", text_colors[colorSetting.textIndex]);
-        colorSetting.currentTextCol = text_colors[colorSetting.textIndex];
+    else {
+        colorSetting.currentText++;
+        tempTextElements.css("color", text_colors[colorSetting.currentText]);
     }
-    $("#textcol").css("background-color", colorSetting.currentTextCol);
+    $("#textcol").css("background-color", text_colors[colorSetting.currentText]);
+    fetch(`/users/${userID}?color=${colorSetting.currentText}`, {
+        method: "POST",
+        body: ""
+    });
 });
 // Reset colors
 options.find(".reset").click(function (event) {
@@ -84,10 +97,13 @@ banner_help.find("#close-btn").click(function (event) {
     options.css("pointer-events", "all");
 });
 // Main input extention when focused
-inputDiv.find(".wrapper").focusin(function (event) {
+inputDiv
+    .find(".wrapper")
+    .focusin(function (event) {
     $(this).find("input[type=text]").css("width", 625);
     $(this).css("width", 700);
-}).focusout(function (event) {
+})
+    .focusout(function (event) {
     $(this).find("input[type=text]").css("width", 370);
     $(this).css("width", 470);
 });
@@ -127,15 +143,16 @@ Array.prototype.has = function (element) {
     }
     return false;
 };
-function postTask(content = null, timestamp = null, isImportant = false) {
+function postTask(content = null, timestamp = null, isImportant = false, id = null) {
     // Text field
     let textInput = inputDiv.find("input"), task;
     if (!content && !timestamp) {
-        if ((textInput.is(":focus") || $("#insert").is(":focus")) && textInput.val().toString().trim() !== "") {
+        if ((textInput.is(":focus") || $("#insert").is(":focus")) &&
+            textInput.val().toString().trim() !== "") {
             if (banner_empty.css("display") !== "none") {
                 banner_empty.css({
-                    "top": "55vh",
-                    "filter": "opacity(0)"
+                    top: "55vh",
+                    filter: "opacity(0)",
                 });
                 setTimeout(() => {
                     banner_empty.hide();
@@ -149,20 +166,30 @@ function postTask(content = null, timestamp = null, isImportant = false) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "_meta": "post"
+                _meta: "post",
             },
-            body: JSON.stringify({ content: task.content, timestamp: task.timestamp })
-        }).then(res => res.text()).then(res => {
-            console.log(res);
+            body: JSON.stringify({
+                content: task.content,
+                timestamp: task.timestamp,
+            }),
+        })
+            .then((res) => res.text())
+            .then((res) => {
+            $(task.element).attr("data-id", res);
         });
     }
     else {
         // If task is present (received from the server)
         // Only make it, no post and send
-        let task = new Task(content, Number(timestamp));
+        let task = new Task(content, Number(timestamp), isImportant);
+        if (id)
+            $(task.element).attr("data-id", id);
         if (isImportant)
-            $(task.element).addClass("active")
-                .find("button.mark").text("Mark as default").addClass("active");
+            $(task.element)
+                .addClass("active")
+                .find("button.mark")
+                .text("Mark as default")
+                .addClass("active");
     }
     tempTextElements = $(".text-col");
 }

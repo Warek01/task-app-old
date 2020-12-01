@@ -1,0 +1,80 @@
+@import "../../scss/fonts";
+
+body {
+  margin: 0;
+  background-color: #74b9ff;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  color: #fff;
+}
+
+header {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    margin-left: 5%;
+    width: 90%;
+    height: 1px;
+    background-color: #6f6f6f;
+  }
+
+  h2 {
+    font-family: "Baloo Tamma 2", cursive;
+    position: relative;
+    display: inline-block;
+    margin: 5px 300px 0px;
+    font-size: 3em;
+    text-transform: uppercase;
+    cursor: default;
+  }
+}
+
+article {
+  display: flex;
+  position: relative;
+  justify-content: center;
+
+  h1 {
+    font-size: 6.25em;
+    text-shadow: 3px 3px 3px #6f6f6f;
+    letter-spacing: 7px;
+    margin-top: 50px;
+  }
+}
+
+aside {
+  font-size: 20px;
+  text-align: center;
+}
+
+span.path {
+  color: #6c5ce7;
+}
+
+.go-back {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  bottom: 50px;
+
+  button {
+    padding: 7px 18px;
+    border: none;
+    background-color: rgba(#0984e3, 0.5);
+    color: #fff;
+    cursor: pointer;
+    transition: all 200ms ease;
+
+    &:hover {
+      background-color: rgba(#0984e3, 1);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="./style.css">
     <title>Task app</title>
 </head>
+
 <body>
 
     <div class="modal">
@@ -31,11 +33,23 @@
             <button>
                 options
                 <ul class="content">
-                    <li class="text-col help"><p>Help</p></li>
-                    <li class="text-col bgc"><p>Change background color</p> <div id="bgcol"></li>
-                    <li class="text-col textc"><p>Change text color</p> <div id="textcol"></li>
-                    <li class="text-col reset"><p>Reset</li>
-                    <li class="text-col reset" onclick="document.location = '/history'"><p>View History</li>
+                    <li class="text-col help">
+                        <p>Help</p>
+                    </li>
+                    <li class="text-col bgc">
+                        <p>Change background color</p>
+                        <div id="bgcol">
+                    </li>
+                    <li class="text-col textc">
+                        <p>Change text color</p>
+                        <div id="textcol">
+                    </li>
+                    <li class="text-col reset">
+                        <p>Reset
+                    </li>
+                    <li class="text-col reset" onclick="document.location = '/history'">
+                        <p>View History
+                    </li>
                 </ul>
             </button>
         </div>
@@ -60,40 +74,54 @@
     </div>
 
     <div class="main-content text-col">
-       
+
     </div>
 
     <div id="banner_help">
-        <div class="node text-col"><p>Press <kbd>Enter</kbd> to insert task.</p></div>
-        <div class="node text-col"><p>Press <kbd>Delete</kbd> to delete task.</p></div>
-        <div class="node text-col"><p>Press <kbd>F1</kbd> to reset colors.</p></div>
-        <div class="node text-col"><p>Press <kbd>Esc</kbd> to exit this window.</p></div>
+        <div class="node text-col">
+            <p>Press <kbd>Enter</kbd> to insert task.</p>
+        </div>
+        <div class="node text-col">
+            <p>Press <kbd>Delete</kbd> to delete task.</p>
+        </div>
+        <div class="node text-col">
+            <p>Press <kbd>F1</kbd> to reset colors.</p>
+        </div>
+        <div class="node text-col">
+            <p>Press <kbd>Esc</kbd> to exit this window.</p>
+        </div>
         <div class="node text-col"></div>
         <div class="node text-col"></div>
         <button id="close-btn">close</button>
     </div>
 
     <script>
-        const userID = "<%= userID %>";
+        const userID = "<%= userName %>";
         const newUser = "<%= newUser %>" === "true";
+        const SvColor = Number("<%= colorIndex %>");
+        const SvBgColor = Number("<%= bgIndex %>");
+        console.log("userid: <%= userID %>");
     </script>
 
-    <% if (locals.tasks && locals.tasks.length > 0) { %> 
-        <style>
-            #banner-empty { display: none; }
-        </style>
-    <% } %> 
-    
+    <% if (locals.tasks && locals.tasks.length > 0) { %>
+    <style>
+        #banner-empty {
+            display: none;
+        }
+    </style>
+    <% } %>
+
     <script src="./jquery.js"></script>
     <script src="./Task.js"></script>
     <script src="./script.js"></script>
-    <% if (locals.tasks) { %> 
-        <% tasks.forEach(element => { %> 
-            <script>
-                postTask("<%= element.content %>", "<%= element.timestamp %>", 
-                "<%= element.important %>" === "true");
-            </script>
-        <% }); %> 
-    <% } %> 
+    <% if (locals.tasks) { %>
+    <% tasks.forEach(element => { %>
+    <script>
+        postTask("<%= element.content %>", "<%= element.timestamp %>",
+            "<%= element.isImportant %>" === "true", "<%= element._id %>");
+    </script>
+    <% }); %>
+    <% } %>
 </body>
+
 </html>

@@ -1,11 +1,9 @@
+"use strict";
 function renderPage() {
     location.href = `/users/${$("input#user-name").val().toString()}`;
 }
+$("#ok").click(renderPage);
 $(window).keydown(function (event) {
-    switch (event.key) {
-        case "Enter":
-            renderPage();
-            break;
-    }
+    if (event.key === "Enter")
+        renderPage();
 });
-$("input#user-name").trigger("focus");

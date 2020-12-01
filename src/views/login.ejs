@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,10 @@
    <meta name="description" content="">
    <!-- <base href="/"> -->
    <link rel="shortcut icon" href="./img/icon.jpg" type="image/x-icon">
-   <link rel="stylesheet" href="./views/sources/login_style.css">
+   <link rel="stylesheet" href="./views/src/login_style.css">
    <title>Login</title>
 </head>
+
 <body>
 
    <div class="wrapper">
@@ -25,17 +27,21 @@
          </label>
          <input type="text" name="login" id="user-name" placeholder="User name here">
          <br>
-         <button onclick="renderPage()">
+         <button id="ok">
             GO
          </button>
          <button onclick="location = '/nouser'">
             WITHOUT USER
          </button>
+         <!-- <button id="go-admin">
+            ADMINISTRATE
+         </button> -->
       </div>
    </div>
 
    <script src="./jquery.js"></script>
-   <script src="./views/sources/login_script.js"></script>
+   <script src="./views/src/login_script.js"></script>
 
 </body>
+
 </html>

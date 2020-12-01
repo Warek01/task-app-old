@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -10,18 +11,23 @@
 
 body {
   background-color: #bdc3c7;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 16px;
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .text-col {
   color: #fff;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Baloo Tamma 2', cursive;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Baloo Tamma 2", cursive;
   user-select: none;
 }
 
@@ -39,8 +45,9 @@ kbd {
 
 /* font-family: 'Baloo Tamma 2', cursive;  -Logo- */
 /* font-family: 'Open Sans', sans-serif; -Content- */
+/* font-family: 'Montserrat', sans-serif; Extra light 200, light 300 */
 @font-face {
-  font-family: 'Fira Code';
+  font-family: "Fira Code";
   src: url("fonts/subset-FiraCode-Regular.eot");
   src: local("Fira Code Regular"), local("FiraCode-Regular"), url("fonts/subset-FiraCode-Regular.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Regular.woff2") format("woff2"), url("fonts/subset-FiraCode-Regular.woff") format("woff"), url("fonts/subset-FiraCode-Regular.ttf") format("truetype");
   font-weight: normal;
@@ -48,7 +55,7 @@ kbd {
   font-display: fallback;
 }
 @font-face {
-  font-family: 'Fira Code';
+  font-family: "Fira Code";
   src: url("fonts/subset-FiraCode-Light.eot");
   src: local("Fira Code Light"), local("FiraCode-Light"), url("fonts/subset-FiraCode-Light.eot?#iefix") format("embedded-opentype"), url("fonts/subset-FiraCode-Light.woff2") format("woff2"), url("fonts/subset-FiraCode-Light.woff") format("woff"), url("fonts/subset-FiraCode-Light.ttf") format("truetype");
   font-weight: 300;
@@ -70,7 +77,7 @@ kbd {
   border-radius: 5px;
   pointer-events: none;
   filter: opacity(0);
-  transition: all .3s ease, filter 0s;
+  transition: all 0.3s ease, filter 0s;
 }
 .modal span.content {
   position: relative;
@@ -122,7 +129,7 @@ header .logo {
   color: #fff;
   font-size: 88px;
   text-transform: uppercase;
-  font-family: 'Baloo Tamma 2', cursive;
+  font-family: "Baloo Tamma 2", cursive;
   font-weight: bold;
   line-height: 1.15;
   cursor: default;
@@ -149,7 +156,7 @@ header #options button {
   font-size: 16px;
   letter-spacing: 1px;
   font-weight: 600;
-  transition: background-color .3s ease, box-shadow 1s ease;
+  transition: background-color 0.3s ease, box-shadow 1s ease;
 }
 header #options button:hover {
   background-color: #1168a7;
@@ -170,7 +177,7 @@ header #options button ul.content {
   font-size: 14px;
   text-align: center;
   overflow: hidden;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
   font-weight: normal;
   box-sizing: border-box;
 }
@@ -254,7 +261,7 @@ header #options:focus {
   background-color: #485460;
   border-radius: 25px;
   overflow: hidden;
-  transition: width .5s ease;
+  transition: width 0.5s ease;
   z-index: 6;
 }
 #input .wrapper img {
@@ -268,7 +275,7 @@ header #options:focus {
   max-width: 40px;
   max-height: 40px;
 }
-#input input[type=text] {
+#input input[type="text"] {
   position: relative;
   display: block;
   width: 370px;
@@ -278,12 +285,12 @@ header #options:focus {
   font-size: 16px;
   border: none;
   background-color: #485460;
-  transition: width .6s ease;
+  transition: width 0.6s ease;
 }
-#input input[type=text]:focus {
+#input input[type="text"]:focus {
   outline: none;
 }
-#input input[type=text]::placeholder {
+#input input[type="text"]::placeholder {
   color: #fff;
   font-size: 14px;
   letter-spacing: 1px;
@@ -301,7 +308,7 @@ header #options:focus {
   border: none;
   cursor: pointer;
   overflow: hidden;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   z-index: 2;
 }
 #input #insert:hover {
@@ -317,7 +324,7 @@ header #options:focus {
   width: 50px;
   background-color: #bdc3c7;
   z-index: 3;
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
 #input #insert span {
   position: relative;
@@ -335,12 +342,12 @@ header #options:focus {
   position: relative;
   display: block;
   width: 100%;
-  height: 75px;
+  min-height: 75px;
   padding-top: 5px;
   margin-top: 15px;
   box-sizing: content-box;
   border-radius: 5px;
-  transition: all .3s linear, background-color 0s, padding .25s;
+  transition: all 0.3s linear, background-color 0s, padding 0.25s;
 }
 .main-content .task.active {
   background-color: #ee5a24;
@@ -352,14 +359,18 @@ header #options:focus {
   background-color: rgba(72, 126, 176, 0.2);
 }
 .main-content .task:hover .content {
-  height: 40px;
-  font-size: 1.35em;
+  min-height: 40px;
+  font-size: 1.2em;
 }
 .main-content .task:hover .content::after {
+  bottom: -10px;
   width: 98%;
   background-color: rgba(47, 53, 66, 0.35);
 }
-.main-content .task:hover .timestamp, .main-content .task:hover button {
+.main-content .task:hover .timestamp {
+  top: 10px;
+}
+.main-content .task:hover button {
   top: 10px;
 }
 .main-content .task:first-child {
@@ -371,10 +382,11 @@ header #options:focus {
 .main-content .task .content {
   position: relative;
   display: block;
-  width: 100%;
-  height: 30px;
+  width: 95%;
+  min-height: 30px;
   margin-left: 1.25%;
   top: 0;
+  word-break: break-word;
 }
 .main-content .task .content:focus {
   outline: none;
@@ -387,37 +399,38 @@ header #options:focus {
   width: 20%;
   height: 1px;
   background-color: rgba(47, 53, 66, 0.1);
-  transition: width .3s ease;
+}
+.main-content .task .content p {
+  display: inline-block;
+  position: relative;
+  font-size: 18px;
+  margin-left: 1.5%;
 }
 .main-content .task .timestamp {
   position: relative;
   display: inline-block;
   height: 30px;
   width: 230px;
-  top: 0;
-  margin-top: 7px;
-  margin-left: 1%;
+  margin-top: 20px;
+  margin-left: .75%;
+  font-family: "Montserrat";
+  font-weight: 300;
+  font-size: .8em;
   word-spacing: 2px;
-  letter-spacing: 1px;
+  letter-spacing: 0px;
   color: #eee;
-  transition: all 300ms ease;
-}
-.main-content .task p {
-  display: inline-block;
-  position: relative;
-  font-size: 18px;
-  margin-left: 1.5%;
+  transition: all 0.3s ease;
 }
 .main-content .task button {
   position: relative;
-  top: 0;
+  top: -5px;
   padding: 5px 8px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
   color: #fff;
   background-color: #1e90ff;
-  transition: all 300ms ease;
+  transition: all 0.3s ease;
 }
 .main-content .task button:focus {
   outline: none;
@@ -427,9 +440,6 @@ header #options:focus {
 }
 .main-content .task button.active {
   background-color: gray;
-}
-.main-content .task button:hover {
-  box-shadow: 0 0 45px #84c2ff, 0 0 90px #84c2ff;
 }
 
 #banner-empty {
@@ -474,7 +484,7 @@ header #options:focus {
   left: 2.5%;
   opacity: 1;
   z-index: 996;
-  transition: height .3s ease;
+  transition: height 0.3s ease;
 }
 #banner_help .node {
   position: relative;
@@ -501,7 +511,7 @@ header #options:focus {
   color: #fff;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color .15s ease, box-shadow .3s ease;
+  transition: background-color 0.15s ease, box-shadow 0.3s ease;
 }
 #banner_help #close-btn:hover {
   background-color: #1168a7;

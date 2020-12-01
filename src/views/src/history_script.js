@@ -1,3 +1,4 @@
+"use strict";
 let taskCount = 0, modal = $(".modal"), emptyBanner = $("#empty");
 $(document).ready(function () {
     if ($(".main-content").children().length > 0)
